@@ -7,18 +7,25 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
+      background: #f7f9fb;
+      color: #222;
+      padding: 2em;
+      margin: 0;
+    }
+    .container {
       max-width: 800px;
-      margin: 40px auto;
-      line-height: 1.6;
-      background-color: #f9f9f9;
-      color: #333;
+      margin: auto;
+      background: #fff;
+      padding: 2em;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
     }
     nav {
       text-align: center;
       margin-bottom: 2em;
     }
     nav a {
-      margin: 0 15px;
+      margin: 0 12px;
       text-decoration: none;
       color: #007acc;
       font-weight: bold;
@@ -27,41 +34,40 @@
       font-size: 2.5em;
       text-align: center;
     }
-    .content {
-      padding: 20px;
-      background: white;
-      border-radius: 12px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+    p { margin-bottom: 1.4em; }
+    .footer {
+      text-align: center;
+      font-size: 0.9em;
+      margin-top: 2em;
+      color: #999;
     }
   </style>
 </head>
 <body>
 
-  <nav>
-    <a href="index.html">Home</a>
-    <a href="about.html">About</a>
-    <a href="research.html">Research</a>
-    <a href="cv.html">CV</a>
-  </nav>
+  <div class="container">
+    <nav>
+      <a href="index.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="research.html">Research</a>
+      <a href="cv.html">CV</a>
+    </nav>
 
-  <div class="content">
     <h1>About Me</h1>
     <p>
-      I'm William Rosencrans, a PhD candidate in Biochemistry and Molecular Biophysics at the California Institute of Technology (Caltech).
-      My research centers around mitochondrial biology — especially the processes that regulate mitophagy, mitochondrial calcium flux, and ion channel dynamics. I’m particularly interested in the role of VDAC proteins and transcriptional regulators like KLF4 in neurodegenerative diseases.
+      I'm William Rosencrans, a PhD candidate in Biochemistry and Molecular Biophysics at Caltech. My research centers around mitochondrial biology — especially the processes that regulate mitophagy, mitochondrial calcium flux, and ion channel dynamics.
+    </p>
+    <p>
+      I hold a BA in Physics (with a minor in Biology) from Colgate University. I've conducted research in chromatin biophysics, ecology, and mitochondrial channel behavior at NIH using single-molecule tools.
+    </p>
+    <p>
+      Today, I work at the interface of biophysics, cell biology, and systems neuroscience — seeking to understand how mitochondrial dysfunction contributes to neurodegenerative disorders like Parkinson’s and Alzheimer’s.
+    </p>
+    <p>
+      Outside the lab, I enjoy science communication, hiking, and coffee-fueled coding.
     </p>
 
-    <p>
-      Before Caltech, I earned my Bachelor’s degree in Physics with a minor in Biology from Colgate University. During my undergraduate and post-baccalaureate years, I conducted research in chromatin biophysics, ecology, and single-molecule electrophysiology. I later joined the National Institutes of Health (NIH), where I applied single-molecule techniques to study mitochondrial membrane channels like VDACs.
-    </p>
-
-    <p>
-      Today, I work at the interface of biophysics, cell biology, and systems neuroscience — with the goal of better understanding how mitochondrial dysfunction contributes to diseases like Parkinson’s and Alzheimer’s.
-    </p>
-
-    <p>
-      Outside the lab, I’m passionate about science communication, coffee, and hiking coastal trails.
-    </p>
+    <div class="footer">© 2025 William Rosencrans</div>
   </div>
 
 </body>
