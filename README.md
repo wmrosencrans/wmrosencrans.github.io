@@ -6,7 +6,7 @@ Personal site built as a mammalian cell. Each organelle is a page. Hosted on Git
 |------------------|--------------------|--------------------|
 | Nucleus          | About              | `about.html`       |
 | Mitochondria     | Research           | `research.html`    |
-| Rough ER         | Publications       | `publications.html`|
+| Endoplasmic Reticulum | Publications       | `publications.html`|
 | Golgi apparatus  | News               | `news.html`        |
 | Centrosome       | CV                 | `cv.html`          |
 | Lysosomes        | Beyond the Bench   | `life.html`        |

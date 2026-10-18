@@ -15,25 +15,25 @@
   // zoom: [cx, cy, size] in cell coordinates; label: pill centre.
   var ORGANELLES = [
     { id: 'nucleus', name: 'Nucleus', page: 'About', href: 'about.html', color: C.nuc,
-      fn: 'Stores the genome — the core of who I am and where I came from.',
+      fn: 'What’s in the genes? A little about my background and mission.',
       zoom: [440, 470, 400], label: [430, 545] },
     { id: 'mito', name: 'Mitochondria', page: 'Research', href: 'research.html', color: C.mito,
       fn: 'Mapping how cells sort, recycle, and destroy their own parts, and building small molecules that rewire that machinery against disease.',
       zoom: [250, 250, 240], label: [285, 340] },
-    { id: 'er', name: 'Rough ER', page: 'Publications', href: 'publications.html', color: C.er,
-      fn: 'Where new proteins are made. Here: everything that has come off my ribosomes.',
+    { id: 'er', name: 'Endoplasmic Reticulum', page: 'Publications', href: 'publications.html', color: C.er,
+      fn: 'The rough ER is studded with ribosomes, translating and folding the cell’s output. Here’s what my team and I have been building.',
       zoom: [600, 600, 360], label: [612, 612] },
     { id: 'golgi', name: 'Golgi apparatus', page: 'News', href: 'news.html', color: C.golgi,
-      fn: 'Packages cargo and ships it out (and, it turns out, sends STING to the lysosome). The latest updates.',
-      zoom: [735, 215, 260], label: [742, 232] },
+      fn: 'The Golgi packages cargo into vesicles and ships it out to the rest of the cell. Here’s what’s shipping.',
+      zoom: [700, 245, 220], label: [718, 248] },
     { id: 'centro', name: 'Centrosome', page: 'CV', href: 'cv.html', color: C.centro,
-      fn: 'Organizes the microtubule tracks the whole cell runs on — the timeline.',
+      fn: 'The centrosome organizes the microtubules every other organelle travels along. Check out my track record.',
       zoom: [640, 330, 160], label: [636, 398] },
     { id: 'lyso', name: 'Lysosomes', page: 'Beyond the Bench', href: 'life.html', color: C.lyso,
-      fn: 'Digests and recycles — the cell’s kitchen. History, poetry, cooking, hiking, tea.',
+      fn: 'Outside the lab',
       zoom: [420, 170, 200], label: [420, 236] },
     { id: 'membrane', name: 'Plasma membrane', page: 'Contact', href: 'contact.html', color: C.mem,
-      fn: 'Where the cell receives signals from outside. Send one.',
+      fn: 'Receptors on the plasma membrane are how a cell hears from the outside world. Send a signal!',
       zoom: [215, 815, 300], label: [252, 752] }
   ];
   var byId = {};
@@ -170,6 +170,70 @@
     hit(g, { d: capsule(L + 6, w + 6) });
   }
 
+  // A mitochondrion that endlessly divides and fuses (fission/fusion dynamics,
+  // with a nod to David Chan). Returns update(tSeconds).
+  function liveMito(g, ctx, len, w, seed, offset) {
+    var L = len / 2, r = rng(seed), cid = ctx.px + '-mclip' + seed;
+    var halo = el('path', { fill: C.mito, opacity: 0.3, filter: 'url(#' + ctx.px + '-soft)' }, g);
+    var body = el('path', { fill: 'url(#' + ctx.px + '-mito)', stroke: C.mito, 'stroke-width': 2.5 }, g);
+    var innerM = el('path', { fill: 'none', stroke: C.mito, 'stroke-width': 1.3, 'stroke-opacity': 0.55 }, g);
+    var clip = el('clipPath', { id: cid }, g.ownerSVGElement.querySelector('defs'));
+    var clipPath = el('path', {}, clip);
+    var cr = el('g', { 'clip-path': 'url(#' + cid + ')', stroke: C.mito, 'stroke-width': 4, 'stroke-linecap': 'round', 'stroke-opacity': 0.8, fill: 'none' }, g);
+    var halves = [el('g', null, cr), el('g', null, cr)];
+    var step = Math.max(11, w * 0.5), top = r() < 0.5;
+    for (var x = -L + w * 0.75; x < L - w * 0.75; x += step * (0.85 + r() * 0.3)) {
+      if (Math.abs(x) < w * 0.45) continue;            // keep the division site clear
+      var edge = w - 6, depth = edge * (1.1 + r() * 0.6);
+      var y0 = top ? -edge : edge, y1 = top ? -edge + depth : edge - depth, bend = (r() - 0.5) * 6;
+      el('path', { d: 'M' + f(x) + ',' + f(y0) + 'Q' + f(x + bend) + ',' + f((y0 + y1) / 2) + ' ' + f(x + bend * 0.5) + ',' + f(y1) }, halves[x < 0 ? 0 : 1]);
+      top = !top;
+    }
+    hit(g, { d: capsule(L + 10, w + 8) });
+
+    function cap(x, ww, LL) {                     // half-width of a capsule centred at 0
+      var ax = Math.abs(x); ww = Math.min(ww, LL);
+      if (ax <= LL - ww) return ww;
+      var u = (ax - (LL - ww)) / ww; return u >= 1 ? 0 : ww * Math.sqrt(1 - u * u);
+    }
+    // closed outline from a half-width function, optionally rotated about (cx, 0)
+    function loop(x0, x1, hfn, dx, ang, cx) {
+      var n = 26, topE = [], botE = [], ca = Math.cos(ang || 0), sa = Math.sin(ang || 0);
+      function pt(x, y) { var px = x - cx; return [cx + px * ca - y * sa + dx, px * sa + y * ca]; }
+      for (var i = 0; i <= n; i++) {
+        var xx = x0 + (x1 - x0) * i / n, h = Math.max(hfn(xx), 0.4);
+        topE.push(pt(xx, -h)); botE.unshift(pt(xx, h));
+      }
+      return smoothPath(topE.concat(botE.slice(1, -1)), true);
+    }
+    // u = 1: one tubule; u = 0: two normal daughter tubules touching end to end.
+    // gap > 0: the daughters have separated and drift independently.
+    function outline(ww, LL, u, gap, ang) {
+      var hl = LL / 2;
+      function dL(x) { return cap(x + hl, ww, hl); }
+      function dR(x) { return cap(x - hl, ww, hl); }
+      if (gap < 0.5) return loop(-LL, LL, function (x) { return (1 - u) * Math.max(dL(x), dR(x)) + u * cap(x, ww, LL); }, 0, 0, 0);
+      return loop(-LL, 0, dL, -gap / 2, -ang, -hl) + loop(0, LL, dR, gap / 2, ang, hl);
+    }
+    function ease(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+    var period = 12 + r() * 6, G = 0.3 * len, A = (6 + r() * 8) * D * (r() < 0.5 ? -1 : 1);
+    return function update(t) {
+      var p = ((t / period) + offset) % 1, u = 1, sep = 0;
+      if (p < 0.3) u = 1;                                   // one continuous tubule
+      else if (p < 0.42) u = 1 - ease((p - 0.3) / 0.12);    // constriction at the division site
+      else if (p < 0.56) { u = 0; sep = ease((p - 0.42) / 0.14); }        // scission; daughters move apart
+      else if (p < 0.7) { u = 0; sep = 1; }                 // two normal mitochondria
+      else if (p < 0.82) { u = 0; sep = 1 - ease((p - 0.7) / 0.12); }     // they meet end to end
+      else if (p < 0.95) u = ease((p - 0.82) / 0.13);       // fusion: the junction widens
+      var gap = G * sep, ang = A * sep;
+      var d = outline(w, L, u, gap, ang);
+      body.setAttribute('d', d); halo.setAttribute('d', d); clipPath.setAttribute('d', d);
+      innerM.setAttribute('d', outline(w - 5, L - 5, u, gap, ang));
+      halves[0].setAttribute('transform', 'translate(' + f(-gap / 2) + ' 0) rotate(' + f(-ang / D) + ' ' + f(-L / 2) + ' 0)');
+      halves[1].setAttribute('transform', 'translate(' + f(gap / 2) + ' 0) rotate(' + f(ang / D) + ' ' + f(L / 2) + ' 0)');
+    };
+  }
+
   function erSheets() {
     var r = rng(21), sheets = [];
     for (var s = 0; s < 4; s++) {
@@ -210,7 +274,7 @@
     var r = rng(41);
     var stack = el('g', { fill: 'none', 'stroke-linecap': 'round' }, g);
     for (var i = 0; i < 5; i++) {
-      var rr = 112 + i * 16, mid = -55 * D, half = (40 - Math.abs(i - 2) * 4 + r() * 3) * D, pts = [];
+      var rr = 84 + i * 15, mid = -55 * D, half = (40 - Math.abs(i - 2) * 4 + r() * 3) * D, pts = [];
       for (var a = mid - half; a <= mid + half; a += 0.04) {
         var q = rr + 2.5 * Math.sin(a * 14 + i);
         pts.push([Math.cos(a) * q, Math.sin(a) * q]);
@@ -225,11 +289,11 @@
     }
     for (var v = 0; v < 16; v++) {
       var trans = v < 9, ang = trans ? (-95 + r() * 80) * D : (r() < 0.5 ? -103 - r() * 10 : -7 + r() * 10) * D;
-      var rad = trans ? 190 + r() * 20 : 115 + r() * 62, vr = 3.5 + r() * 3.5;
+      var rad = trans ? 158 + r() * 18 : 86 + r() * 52, vr = 3.5 + r() * 3.5;
       el('circle', { cx: f(Math.cos(ang) * rad), cy: f(Math.sin(ang) * rad), r: f(vr),
         fill: C.golgi, 'fill-opacity': 0.25, stroke: C.golgi, 'stroke-width': 1.8 }, g);
     }
-    hit(g, { d: sector(96, 214, -112 * D, 2 * D, 1) });
+    hit(g, { d: sector(70, 182, -112 * D, 2 * D, 1) });
   }
 
   function drawCentrosome(g, ctx) {
@@ -254,12 +318,252 @@
   }
 
   // Double-membraned autophagosome engulfing a mitochondrial fragment (mitophagy).
-  function drawAutophagosome(g, ctx) {
-    el('path', { d: blob(0, 0, 36, 34, 61, 0.05), fill: 'url(#' + ctx.px + '-auto)', stroke: '#e9e2ff', 'stroke-width': 2, 'stroke-opacity': 0.75 }, g);
-    el('path', { d: blob(0, 0, 29, 27, 61, 0.05), fill: 'none', stroke: '#e9e2ff', 'stroke-width': 1.3, 'stroke-opacity': 0.5 }, g);
-    var m = el('g', { transform: 'rotate(-25)', opacity: 0.85 }, g);
-    el('path', { d: capsule(19, 9), fill: C.mito, 'fill-opacity': 0.3, stroke: C.mito, 'stroke-width': 1.8 }, m);
-    el('path', { d: 'M-6,-5 v6 M2,5 v-6 M10,-4 v5', stroke: C.mito, 'stroke-width': 2, 'stroke-linecap': 'round' }, m);
+  // The mitochondrion next to the mitophagy site, on the same 18 s clock as
+  // mitophagy(): it divides asymmetrically, the small daughter (`rd` half-length)
+  // is handed to the autophagy machinery, and the remaining daughter elongates
+  // back to full length before dividing again.
+  var TURNOVER_PERIOD = 18;
+  function turnoverMito(g, ctx, L0, w, rd, seed) {
+    var r = rng(seed), cid = ctx.px + '-mturn', xs = L0 - 2 * rd;
+    var halo = el('path', { fill: C.mito, opacity: 0.3, filter: 'url(#' + ctx.px + '-soft)' }, g);
+    var body = el('path', { fill: 'url(#' + ctx.px + '-mito)', stroke: C.mito, 'stroke-width': 2.5 }, g);
+    var innerM = el('path', { fill: 'none', stroke: C.mito, 'stroke-width': 1.3, 'stroke-opacity': 0.55 }, g);
+    var clipPath = el('path', {}, el('clipPath', { id: cid }, g.ownerSVGElement.querySelector('defs')));
+    var cr = el('g', { 'clip-path': 'url(#' + cid + ')', stroke: C.mito, 'stroke-width': 3.4, 'stroke-linecap': 'round', 'stroke-opacity': 0.8, fill: 'none' }, g);
+    var top = true;
+    for (var x = -L0 + w * 0.8; x < L0 - w * 0.6; x += 9 + r() * 3) {
+      if (Math.abs(x - xs) < w * 0.6) continue;           // keep the division site clear
+      var edge = w - 4, depth = edge * (1.2 + r() * 0.5), y0 = top ? -edge : edge, y1 = top ? -edge + depth : edge - depth;
+      el('path', { d: 'M' + f(x) + ',' + f(y0) + 'L' + f(x + (r() - 0.5) * 3) + ',' + f(y1) }, cr);
+      top = !top;
+    }
+    hit(g, { d: capsule(L0 + 10, w + 8) });
+
+    function capSeg(x, a, b, ww) {               // capsule spanning [a, b]
+      var c = (a + b) / 2, L = (b - a) / 2, ax = Math.abs(x - c); ww = Math.min(ww, L);
+      if (ax <= L - ww) return ww;
+      var u = (ax - (L - ww)) / ww; return u >= 1 ? 0 : ww * Math.sqrt(1 - u * u);
+    }
+    function loop(x0, x1, hfn) {
+      var n = 28, topE = [], botE = [];
+      for (var i = 0; i <= n; i++) {
+        var xx = x0 + (x1 - x0) * i / n, h = Math.max(hfn(xx), 0.4);
+        topE.push([xx, -h]); botE.unshift([xx, h]);
+      }
+      return smoothPath(topE.concat(botE.slice(1, -1)), true);
+    }
+    function before(u, ins) {                    // u = 1 whole, u = 0 two touching daughters
+      var a = -L0 + ins, b = L0 - ins, ww = w - ins;
+      return loop(a, b, function (x) {
+        return (1 - u) * Math.max(capSeg(x, a, xs - ins / 2, ww), capSeg(x, xs + ins / 2, b, ww)) + u * capSeg(x, a, b, ww);
+      });
+    }
+    function after(e, ins) {                     // the remaining daughter, growing to the right
+      var a = -L0 + ins, b = e - ins, ww = w - ins;
+      return loop(a, b, function (x) { return capSeg(x, a, b, ww); });
+    }
+    function ease(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+    return function update(t) {
+      var p = (t / TURNOVER_PERIOD) % 1, d, di;
+      if (p < 0.12) {
+        var u = p < 0.05 ? 1 : 1 - ease((p - 0.05) / 0.07);   // constriction near one end
+        d = before(u, 0); di = before(u, 5);
+      } else {
+        var e = xs + (L0 - xs) * ease((p - 0.14) / 0.78);     // elongation back to full length
+        d = after(e, 0); di = after(e, 5);
+      }
+      body.setAttribute('d', d); halo.setAttribute('d', d); clipPath.setAttribute('d', d);
+      innerM.setAttribute('d', di);
+    };
+  }
+
+  // STING trafficking, on a loop (cell coordinates). STING is drawn as a
+  // transmembrane protein (TM segment in the bilayer, ligand-binding domain and
+  // C-terminal tail in the cytosol) and keeps that topology everywhere: on the ER,
+  // on COPII vesicles and post-Golgi carriers (cytosolic face outward), in Golgi
+  // cisternae, and in the lysosome's limiting membrane before it is internalised
+  // and degraded. cGAMP binds, STING oligomerises in the ER membrane, moves cis ->
+  // trans through the Golgi while it signals (IRF3 to the nucleus), and is
+  // delivered to a lysosome. Returns update(tSeconds).
+  var UNITS_PER_UM = 15;
+  var STING_LYSO = [820, 392];
+  function stingTraffic(g) {
+    var period = 20, DIM = '#a0714f', ON = '#ff8a3d', N = 3, VR = 11, LR = 18;
+    var GOLGI_C = [640, 330], GOLGI_R = [84, 99, 114, 129, 144], GOLGI_A = -15 * D;
+    var CGAS = [602, 520], NUC = [520, 452];
+
+    // points on the outer membrane of an ER sheet, with the cytosol-facing normal
+    var sheet = erSheets()[1], k0 = 0, best = 9;
+    sheet.forEach(function (q, i) { var a = Math.atan2(q[1], q[0]); if (Math.abs(a - 10 * D) < best) { best = Math.abs(a - 10 * D); k0 = i; } });
+    k0 = Math.max(9, Math.min(sheet.length - 10, k0));
+    function erPoint(i) {
+      var q0 = sheet[i - 1], q = sheet[i], q1 = sheet[i + 1];
+      var tx = q1[0] - q0[0], ty = q1[1] - q0[1], tl = Math.hypot(tx, ty), nx = ty / tl, ny = -tx / tl;
+      if (nx * q[0] + ny * q[1] < 0) { nx = -nx; ny = -ny; }       // away from the nucleus
+      return { x: 440 + q[0] + nx * 4.5, y: 470 + q[1] + ny * 4.5, a: Math.atan2(ny, nx) };
+    }
+    var ER0 = [erPoint(k0 - 7), erPoint(k0), erPoint(k0 + 7)];     // scattered
+    var ER1 = [erPoint(k0 - 1), erPoint(k0), erPoint(k0 + 1)];     // oligomer
+    var EXIT = { x: ER1[1].x + Math.cos(ER1[1].a) * (VR + 2), y: ER1[1].y + Math.sin(ER1[1].a) * (VR + 2) };
+    var CIS = [GOLGI_C[0] + Math.cos(GOLGI_A) * (GOLGI_R[0] - 14), GOLGI_C[1] + Math.sin(GOLGI_A) * (GOLGI_R[0] - 14)];
+    var TRANS = [GOLGI_C[0] + Math.cos(GOLGI_A) * (GOLGI_R[4] + 16), GOLGI_C[1] + Math.sin(GOLGI_A) * (GOLGI_R[4] + 16)];
+
+    var halo = el('circle', { r: 0, fill: ON, opacity: 0 }, g);
+    var flash = el('circle', { cx: STING_LYSO[0], cy: STING_LYSO[1], r: LR, fill: 'none', stroke: C.lyso, 'stroke-width': 2, opacity: 0 }, g);
+    var ves = el('circle', { r: VR, fill: 'rgba(255,255,255,.05)', stroke: '#f3eadf', 'stroke-width': 1.5, opacity: 0 }, g);
+    var cgamp = ER0.map(function () { return el('circle', { r: 2.2, fill: '#ffffff', opacity: 0 }, g); });
+    var irf = [0, 1, 2].map(function () { return el('circle', { r: 2.4, fill: C.centro, opacity: 0 }, g); });
+    // one STING: local +x points into the cytosol
+    var mols = ER0.map(function () {
+      var m = el('g', null, g);
+      el('rect', { x: -2.4, y: -1.7, width: 4.8, height: 3.4, rx: 1, 'class': 'tm' }, m);   // in the bilayer
+      el('path', { d: 'M2.4,0 L5,0', 'stroke-width': 1.4, fill: 'none', 'class': 'line' }, m);
+      el('ellipse', { cx: 8.2, cy: -2.5, rx: 3.4, ry: 2.4, transform: 'rotate(-20 8.2 -2.5)' }, m);  // LBD lobes
+      el('ellipse', { cx: 8.2, cy: 2.5, rx: 3.4, ry: 2.4, transform: 'rotate(20 8.2 2.5)' }, m);
+      el('path', { d: 'M11.4,0 q3,1.6 5,-1', 'stroke-width': 1.2, fill: 'none', 'class': 'line' }, m);  // C-terminal tail
+      return m;
+    });
+
+    function ease(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+    function seg(p, a, b) { return ease((p - a) / (b - a)); }
+    function lerp(a, b, u) { return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; }
+    function quad(a, c, b, u) { return lerp(lerp(a, c, u), lerp(c, b, u), u); }
+    function onCircle(c, r, a) { return { x: c[0] + Math.cos(a) * r, y: c[1] + Math.sin(a) * r, a: a }; }
+
+    return function update(t) {
+      var p = (t / period) % 1;
+      var act = seg(p, 0.14, 0.22), olig = seg(p, 0.2, 0.3), exitER = seg(p, 0.3, 0.42), golgi = seg(p, 0.42, 0.6),
+          toLyso = seg(p, 0.6, 0.72), fuse = seg(p, 0.72, 0.8), degrade = seg(p, 0.82, 0.95), fresh = seg(p, 0.95, 1);
+      var pose = [], c = null, scale = 1;
+      if (p < 0.2 || p >= 0.95) pose = ER0;
+      else if (p < 0.3) pose = ER0.map(function (q, i) { var r = ER1[i]; return { x: q.x + (r.x - q.x) * olig, y: q.y + (r.y - q.y) * olig, a: q.a + (r.a - q.a) * olig }; });
+      else if (p < 0.42) {
+        // a COPII vesicle buds from the ER and carries the oligomer to the cis-Golgi
+        c = quad([EXIT.x, EXIT.y], [748, 404], CIS, exitER);
+        var a0 = ER1[1].a + Math.PI;
+        pose = [-0.55, 0, 0.55].map(function (da) { return onCircle(c, VR, a0 + Math.PI + da); });
+      } else if (p < 0.6) {
+        // hop cisterna by cisterna, cis -> trans; heads stay on the cytosolic side
+        var hop = golgi * (GOLGI_R.length - 1), i0 = Math.floor(Math.min(hop, GOLGI_R.length - 1.001)), fr = ease((hop - i0) * 1.4);
+        var rr = GOLGI_R[i0] + (GOLGI_R[i0 + 1] - GOLGI_R[i0]) * fr + 5;
+        pose = [-1, 0, 1].map(function (j) { var a = GOLGI_A + j * 8 / rr; return onCircle(GOLGI_C, rr, a); });
+        c = [GOLGI_C[0] + Math.cos(GOLGI_A) * rr, GOLGI_C[1] + Math.sin(GOLGI_A) * rr];
+      } else if (p < 0.72) {
+        c = quad(TRANS, [822, 316], [STING_LYSO[0] - (LR + VR - 4), STING_LYSO[1] - 6], toLyso);
+        pose = [-0.6, 0, 0.6].map(function (da) { return onCircle(c, VR, GOLGI_A + da); });
+      } else {
+        // fusion: STING enters the lysosome's limiting membrane, then is internalised and degraded
+        var dock = [STING_LYSO[0] - (LR + VR - 4), STING_LYSO[1] - 6];
+        c = lerp(dock, STING_LYSO, fuse);
+        var r = VR + (LR - VR) * fuse, inward = degrade;
+        pose = [-0.6, 0, 0.6].map(function (da) {
+          var a = Math.PI + 0.3 + da * (1 - 0.3 * fuse), q = onCircle(c, r * (1 - 0.65 * inward), a);
+          return q;
+        });
+        scale = 1 - 0.5 * degrade;
+      }
+      var col = act > 0.5 && p < 0.95 ? ON : DIM, op = p < 0.82 ? 1 : (p < 0.95 ? 1 - degrade : fresh);
+      mols.forEach(function (m, i) {
+        var q = pose[i];
+        m.setAttribute('transform', 'translate(' + f(q.x) + ' ' + f(q.y) + ') rotate(' + f(q.a / D) + ') scale(' + f(scale) + ')');
+        m.setAttribute('fill', col); m.setAttribute('stroke', col);
+        m.setAttribute('opacity', f(op));
+      });
+      // cGAMP from cGAS in the cytosol to each STING's ligand-binding domain
+      cgamp.forEach(function (dot, i) {
+        var u = seg(p, 0.08 + i * 0.02, 0.16 + i * 0.02), tgt = [ER0[i].x + Math.cos(ER0[i].a) * 8, ER0[i].y + Math.sin(ER0[i].a) * 8], q = lerp(CGAS, tgt, u);
+        dot.setAttribute('cx', f(q[0])); dot.setAttribute('cy', f(q[1]));
+        dot.setAttribute('opacity', p > 0.08 && p < 0.2 ? f(Math.min(1, u * 4) * (1 - seg(p, 0.16 + i * 0.02, 0.2))) : '0');
+      });
+      var mid = c || [pose[1].x, pose[1].y];
+      halo.setAttribute('cx', f(mid[0])); halo.setAttribute('cy', f(mid[1]));
+      halo.setAttribute('r', f(14 + 4 * Math.sin(t * 4)));
+      halo.setAttribute('opacity', f(p >= 0.2 && p < 0.82 ? 0.2 * act : 0));
+      irf.forEach(function (dot, i) {
+        var u = seg(p, 0.46 + i * 0.04, 0.62 + i * 0.04), q = lerp(mid, NUC, u);
+        dot.setAttribute('cx', f(q[0])); dot.setAttribute('cy', f(q[1]));
+        dot.setAttribute('opacity', u > 0 && u < 1 ? f(Math.sin(Math.PI * u)) : '0');
+      });
+      var inVes = (p >= 0.3 && p < 0.42) || (p >= 0.6 && p < 0.8);
+      if (c) { ves.setAttribute('cx', f(c[0])); ves.setAttribute('cy', f(c[1])); }
+      ves.setAttribute('r', f(p >= 0.72 ? VR * (1 - fuse) : VR));
+      ves.setAttribute('opacity', inVes ? f(p < 0.42 ? Math.min(1, exitER * 6) : (p >= 0.72 ? 1 - fuse : Math.min(1, toLyso * 6))) : '0');
+      flash.setAttribute('opacity', p >= 0.72 && p < 0.9 ? f(Math.sin(Math.PI * seg(p, 0.72, 0.9)) * 0.8) : '0');
+      flash.setAttribute('r', f(LR + 8 * seg(p, 0.72, 0.9)));
+    };
+  }
+
+  // Mitophagy, on a loop. A mitochondrial fragment buds off a neighbour and
+  // depolarises; a phagophore (one continuous membrane sheet, so the inner and
+  // outer membranes join at the rim) grows around it and seals into a double-
+  // membrane autophagosome. A lysosome that was already sitting nearby docks
+  // and fuses with the outer membrane, its contents fill the vesicle, the inner
+  // membrane and cargo are degraded, and the autolysosome shrinks back into a
+  // lysosome at its home position. Returns update(tSeconds).
+  function mitophagy(g, ctx, src) {
+    var MEM = '#e9e2ff', R1 = 31, R2 = 25, RL = 14, period = TURNOVER_PERIOD;
+    var HOME = [72, -52];
+    // where the small daughter sits at the moment of scission, in this group's coordinates
+    var sr = src.rot * D, sc = src.L0 - src.rd;
+    var BUD = [src.x + sc * Math.cos(sr) - src.ox, src.y + sc * Math.sin(sr) - src.oy];
+    var phago = el('path', { fill: MEM, 'fill-opacity': 0.16, 'fill-rule': 'evenodd', stroke: MEM, 'stroke-width': 1.6, 'stroke-linejoin': 'round' }, g);
+    var auto = el('circle', { r: R1, fill: C.lyso, 'fill-opacity': 0.3, stroke: C.lyso, 'stroke-width': 2 }, g);
+    var innerVes = el('circle', { r: R2, fill: 'none', stroke: MEM, 'stroke-width': 1.5 }, g);
+    var cargo = el('g', null, g);
+    var cBody = el('path', { d: capsule(src.rd, src.w), fill: 'url(#' + ctx.px + '-mito)', stroke: C.mito, 'stroke-width': 2.5 }, cargo);
+    var cCr = el('path', { d: 'M-11,-10 v9 M-3,10 v-9 M5,-10 v9 M12,9 v-7', stroke: C.mito, 'stroke-width': 3.4, 'stroke-linecap': 'round' }, cargo);
+    var lyso = el('g', null, g);
+    drawLyso(lyso, ctx, RL, 77);
+
+    function pt(r, a) { return f(Math.cos(a) * r) + ',' + f(Math.sin(a) * r); }
+    // a cup of double membrane: outer arc, rounded rim, inner arc back, rounded rim
+    function cup(span) {
+      var c = 200 * D, h = span / 2 * D, a0 = c - h, a1 = c + h, rr = (R1 - R2) / 2, big = span > 180 ? 1 : 0;
+      return 'M' + pt(R1, a0) + 'A' + R1 + ',' + R1 + ' 0 ' + big + ',1 ' + pt(R1, a1) +
+        'A' + rr + ',' + rr + ' 0 0,1 ' + pt(R2, a1) +
+        'A' + R2 + ',' + R2 + ' 0 ' + big + ',0 ' + pt(R2, a0) +
+        'A' + rr + ',' + rr + ' 0 0,1 ' + pt(R1, a0) + 'Z';
+    }
+    function ring() {
+      return 'M' + (-R1) + ',0a' + R1 + ',' + R1 + ' 0 1,0 ' + 2 * R1 + ',0a' + R1 + ',' + R1 + ' 0 1,0 ' + (-2 * R1) + ',0Z' +
+             'M' + (-R2) + ',0a' + R2 + ',' + R2 + ' 0 1,0 ' + 2 * R2 + ',0a' + R2 + ',' + R2 + ' 0 1,0 ' + (-2 * R2) + ',0Z';
+    }
+    function ease(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+    function seg(p, a, b) { return ease((p - a) / (b - a)); }
+    function mix(a, b, u) { return a + (b - a) * u; }
+
+    return function update(t) {
+      var p = (t / period) % 1;
+      var bud = seg(p, 0.12, 0.24), damage = seg(p, 0.22, 0.3), grow = seg(p, 0.3, 0.5),
+          dock = seg(p, 0.52, 0.63), fuse = seg(p, 0.63, 0.72), digest = seg(p, 0.72, 0.88), reform = seg(p, 0.88, 1);
+      var sealed = p >= 0.5, fused = p >= 0.63;
+
+      // cargo: buds off the neighbouring mitochondrion, then loses membrane potential
+      // cargo: the small daughter from the neighbouring fission, which then depolarises
+      cargo.setAttribute('transform', 'translate(' + f(mix(BUD[0], 0, bud)) + ' ' + f(mix(BUD[1], 0, bud)) + ') rotate(' + f(mix(src.rot, -25, bud)) + ') scale(' + f(1 - 0.85 * digest) + ')');
+      cargo.setAttribute('opacity', p < 0.12 ? '0' : f(1 - digest));
+      cBody.setAttribute('fill-opacity', f(mix(1, 0.35, damage)));
+      cBody.setAttribute('stroke-opacity', f(mix(1, 0.6, damage)));
+      cBody.setAttribute('stroke-dasharray', damage > 0.5 ? '5 2.5' : 'none');
+      cCr.setAttribute('stroke-opacity', f(mix(0.85, 0.35, damage)));
+
+      // phagophore cup -> sealed double-membrane autophagosome
+      phago.setAttribute('d', p < 0.3 || fused ? '' : (sealed ? ring() : cup(30 + 330 * grow)));
+
+      // lysosome: always present; docks, fuses, and is re-formed from the autolysosome
+      var dx = R1 + RL - 3, dockPt = [Math.cos(-40 * D) * dx, Math.sin(-40 * D) * dx];
+      lyso.setAttribute('transform', 'translate(' + f(mix(HOME[0], dockPt[0], dock) * (1 - fuse)) + ' ' + f(mix(HOME[1], dockPt[1], dock) * (1 - fuse)) + ') scale(' + f(1 - fuse) + ')');
+      lyso.setAttribute('opacity', p < 0.88 ? f(1 - fuse) : '0');
+
+      // autolysosome: a single limiting membrane around the inner vesicle
+      var ar = mix(R1, RL, reform);
+      auto.setAttribute('r', f(ar));
+      auto.setAttribute('cx', f(mix(0, HOME[0], reform))); auto.setAttribute('cy', f(mix(0, HOME[1], reform)));
+      auto.setAttribute('opacity', fused ? f(Math.min(1, fuse * 1.5) * (p >= 0.88 ? 1 - reform : 1)) : '0');
+      innerVes.setAttribute('opacity', fused ? f(1 - digest) : '0');
+      // at the very end the re-formed lysosome takes over again
+      if (p >= 0.88) lyso.setAttribute('transform', 'translate(' + HOME[0] + ' ' + HOME[1] + ')'), lyso.setAttribute('opacity', f(reform));
+    };
   }
 
   // Receptor pointing toward local -y.
@@ -315,16 +619,27 @@
     drawGolgi(group(svg, byId.golgi, 'translate(640 330)'), ctx);
     drawCentrosome(group(svg, byId.centro, 'translate(640 330)'), ctx);
 
-    var mitoA = group(svg, byId.mito);
-    [[250, 250, -35, 150, 30], [185, 580, 78, 130, 26], [520, 852, -8, 140, 28], [760, 690, 55, 130, 27], [865, 500, 95, 105, 24]]
+    var mitoA = group(svg, byId.mito), mitos = [];
+    [[250, 250, -35, 205, 29], [185, 580, 78, 165, 26], [760, 690, 55, 150, 27], [865, 500, 95, 78, 22]]
       .forEach(function (mm, k) {
-        drawMito(inner(mitoA, 'translate(' + mm[0] + ' ' + mm[1] + ') rotate(' + mm[2] + ')', 'drift d' + k), ctx, mm[3], mm[4], 100 + k);
+        var up = liveMito(inner(mitoA, 'translate(' + mm[0] + ' ' + mm[1] + ') rotate(' + mm[2] + ')', 'drift d' + k), ctx, mm[3], mm[4], 100 + k, k * 0.21);
+        up(0); mitos.push(up);
       });
     var lysoA = group(svg, byId.lyso);
     [[125, 420, 26], [660, 800, 22], [420, 170, 20]].forEach(function (l, k) {
       drawLyso(inner(lysoA, 'translate(' + l[0] + ' ' + l[1] + ')', 'drift d' + (k + 2)), ctx, l[2], 70 + k);
     });
-    drawAutophagosome(el('g', { transform: 'translate(360 800)', class: 'deco' }, svg), ctx);
+    // the lysosome that receives STING from the Golgi (kept still so the carrier lands on it)
+    drawLyso(inner(lysoA, 'translate(' + STING_LYSO[0] + ' ' + STING_LYSO[1] + ')', ''), ctx, 18, 74);
+    // mitochondrial turnover: asymmetric fission hands a daughter to mitophagy
+    var TURN = { x: 520, y: 852, rot: -8, L0: 55, w: 15, rd: 20, ox: 585, oy: 772 };
+    var turnUp = turnoverMito(el('g', { transform: 'translate(' + TURN.x + ' ' + TURN.y + ') rotate(' + TURN.rot + ')' }, mitoA), ctx, TURN.L0, TURN.w, TURN.rd, 102);
+    mitos.push(turnUp);
+    var mph = mitophagy(el('g', { transform: 'translate(' + TURN.ox + ' ' + TURN.oy + ')', class: 'deco' }, svg), ctx, TURN);
+    var still = reduceMotion ? 9.4 : 0;
+    turnUp(still); mph(still);
+    var sting = stingTraffic(el('g', { class: 'deco' }, svg));
+    sting(reduceMotion ? 10 : 0);
 
     var vesLayer = el('g', { class: 'deco' }, svg);
 
@@ -334,13 +649,20 @@
     var memInner = el('path', { d: d0, fill: 'none', stroke: C.mem, 'stroke-width': 1.4, 'stroke-opacity': 0.45,
       transform: 'translate(500 500) scale(0.982) translate(-500 -500)' }, memA);
     var memHit = el('path', { d: d0, class: 'hit hit-stroke' }, memA);
-    var recIdx = [], receptors = [];
-    for (var ri = 0; ri < 9; ri++) recIdx.push(Math.round((118 + ri * 3.6) / 360 * 72) % 72);
-    recIdx.forEach(function () { receptors.push(drawReceptor(memA, 0, 0, 0, 1.15)); });
+    // receptors all around the membrane, with a denser patch by the Contact label
+    var recIdx = [], recScale = [], receptors = [], rr0 = rng(55);
+    for (var ri = 0; ri < 9; ri++) { recIdx.push(Math.round((118 + ri * 3.6) / 360 * 72) % 72); recScale.push(1.15); }
+    for (var rj = 0; rj < 72; rj += 3) {
+      var deg = rj / 72 * 360;
+      if (deg > 108 && deg < 156) continue;
+      if (rr0() < 0.25) continue;                       // irregular spacing
+      recIdx.push(rj); recScale.push(0.75 + rr0() * 0.35);
+    }
+    recIdx.forEach(function (idx, k) { receptors.push(drawReceptor(memA, 0, 0, 0, recScale[k])); });
     function placeReceptors(pts) {
       recIdx.forEach(function (idx, k) {
         var p = pts[idx], th = Math.atan2(p[1] - 500, p[0] - 500) / D;
-        receptors[k].setAttribute('transform', 'translate(' + f(p[0]) + ' ' + f(p[1]) + ') rotate(' + f(th + 90) + ') scale(1.15)');
+        receptors[k].setAttribute('transform', 'translate(' + f(p[0]) + ' ' + f(p[1]) + ') rotate(' + f(th + 90) + ') scale(' + recScale[k] + ')');
       });
     }
     placeReceptors(pts0);
@@ -395,6 +717,9 @@
           cyto.setAttribute('d', d); memGlow.setAttribute('d', d); memLine.setAttribute('d', d);
           memInner.setAttribute('d', d); memHit.setAttribute('d', d);
           placeReceptors(pts);
+          mitos.forEach(function (up) { up(now / 1000); });
+          mph(now / 1000);
+          sting(now / 1000);
           ves.forEach(function (v) { v.t = (v.t + v.v * acc) % 1; });
           placeVes();
           acc = 0;
@@ -417,12 +742,16 @@
       card.fn.textContent = o ? o.fn : cardDefault;
       if (card.dot) card.dot.style.background = o ? o.color : '';
     }
+    // Leaving waits a moment, so moving organelles and edges don't make the highlight flicker.
+    var leaveTimer = null;
+    function enterOrg(id) { clearTimeout(leaveTimer); setActive(id); }
+    function leaveOrg() { clearTimeout(leaveTimer); leaveTimer = setTimeout(function () { setActive(null); }, 120); }
     allOrg.forEach(function (n) {
       var id = n.getAttribute('data-org');
-      n.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') setActive(id); });
-      n.addEventListener('pointerleave', function () { setActive(null); });
-      n.addEventListener('focus', function () { setActive(id); });
-      n.addEventListener('blur', function () { setActive(null); });
+      n.addEventListener('pointerenter', function (e) { if (e.pointerType !== 'touch') enterOrg(id); });
+      n.addEventListener('pointerleave', leaveOrg);
+      n.addEventListener('focus', function () { enterOrg(id); });
+      n.addEventListener('blur', leaveOrg);
       n.addEventListener('click', function (e) {
         if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
         e.preventDefault();
@@ -434,10 +763,11 @@
     if (coord) svg.addEventListener('pointermove', function (e) {
       var pt = svg.createSVGPoint(); pt.x = e.clientX; pt.y = e.clientY;
       var p = pt.matrixTransform(svg.getScreenCTM().inverse());
-      coord.textContent = 'x ' + (p.x / 40).toFixed(1) + ' µm · y ' + (p.y / 40).toFixed(1) + ' µm';
+      coord.textContent = 'x ' + (p.x / UNITS_PER_UM).toFixed(1) + ' µm · y ' + (p.y / UNITS_PER_UM).toFixed(1) + ' µm';
     });
     var bar = document.querySelector('.scalebar i');
-    function sizeBar() { if (bar) bar.style.width = (svg.getBoundingClientRect().width * 200 / 1000) + 'px'; }
+    // ~15 drawing units per µm: the cell (~880 units across) is ~59 µm in diameter
+    function sizeBar() { if (bar) bar.style.width = (svg.getBoundingClientRect().width * 10 * UNITS_PER_UM / 1000) + 'px'; }
     sizeBar(); window.addEventListener('resize', sizeBar);
 
     function zoomTo(o) {
@@ -484,7 +814,7 @@
         drawER(g, ctx);
         break;
       case 'golgi':
-        svg.setAttribute('viewBox', '-70 -250 320 280');
+        svg.setAttribute('viewBox', '-60 -205 260 230');
         drawCentrosome(el('g', { opacity: 0.5 }, g), ctx);
         drawGolgi(g, ctx);
         break;
