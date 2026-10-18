@@ -1,99 +1,53 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <title>William Rosencrans</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(to bottom right, #f0f4f8, #eaf3fb);
-      margin: 0;
-      padding: 0;
-      color: #222;
-    }
-
-    .container {
-      max-width: 700px;
-      margin: 0 auto;
-      padding: 60px 20px;
-      text-align: center;
-      background: #fff;
-      margin-top: 80px;
-      border-radius: 16px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.07);
-    }
-
-    img.profile {
-      width: 160px;
-      height: 160px;
-      object-fit: cover;
-      border-radius: 50%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-
-    h1 {
-      font-size: 2.8em;
-      margin-bottom: 10px;
-    }
-
-    p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
-    }
-
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: 600;
-      font-size: 1.05em;
-    }
-
-    nav {
-      margin-top: 30px;
-      margin-bottom: 10px;
-    }
-
-    .footer {
-      margin-top: 50px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
-
-    @media (max-width: 600px) {
-      h1 { font-size: 2em; }
-      p { font-size: 1em; }
-    }
-  </style>
+  <meta name="description" content="William Rosencrans — postdoctoral fellow at NINDS, NIH, studying autophagy, mitochondrial health, and therapeutics for neurodegenerative disease.">
+  <meta name="theme-color" content="#03050a">
+  <meta property="og:title" content="William Rosencrans">
+  <meta property="og:description" content="Scientist studying autophagy, mitochondria, and therapeutics for neurodegeneration. Explore the cell.">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fell-canon.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="home">
+  <main class="stage">
+    <section class="intro">
+      <p class="kicker mono">Specimen · <em>Homo sapiens</em> · 1 cell</p>
+      <h1>William <br>Rosencrans</h1>
+      <p class="role">Postdoctoral Fellow, NINDS · NIH<br>
+        <span>PhD, Biochemistry &amp; Molecular Biophysics, Caltech</span></p>
+      <p class="lede">I study how cells clean house, from damaged mitochondria to immune alarms that need switching off, and how to rewire that machinery with small molecules to treat neurodegenerative disease.</p>
+      <div class="specimen-card" aria-live="polite">
+        <div class="sc-head mono"><span class="sc-dot"></span><span id="sc-name">Field of view</span></div>
+        <p id="sc-fn">Every organelle in this cell is a page. Hover to identify one; click to zoom in.</p>
+      </div>
+    </section>
 
-  <div class="container">
-  <img class="profile"
-     src="https://raw.githubusercontent.com/rominamir/williamrosencrans.github.io/main/William.png"
-     alt="William Rosencrans" />
+    <figure class="scope">
+      <div class="hud hud-top mono" aria-hidden="true"><span>63× / 1.40 oil</span><span>Merge · 7 ch</span></div>
+      <svg id="cell" class="cell" viewBox="0 0 1000 1000" aria-label="An illustrated mammalian cell. Each organelle links to a page."></svg>
+      <div class="hud hud-bottom mono" aria-hidden="true"><span class="scalebar"><i></i>5 µm</span><span id="hud-coord">tap an organelle</span></div>
+    </figure>
 
-    <h1>William Rosencrans</h1>
-    <p> Post-doctoral Fellow at NINDS, NIH<p>
-    </p>PhD in Biochemistry & Molecular Biophysics from Caltech</p>
-    <p>Exploring autophagy, mitochondrial health, and therapeutics for neurodegenerative disease.</p>
-
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="news.html">News</a>
-      <a href="research.html">Research</a>
-      <a href="CV_July2025.pdf" target="_blank">CV</a>
-      
+    <nav class="legend" aria-label="Organelles">
+      <ol>
+        <li><a href="about.html" data-org="nucleus" style="--c:var(--nuc)"><span class="n mono">01</span><span class="pg">About</span><span class="on mono">Nucleus</span></a></li>
+        <li><a href="research.html" data-org="mito" style="--c:var(--mito)"><span class="n mono">02</span><span class="pg">Research</span><span class="on mono">Mitochondria</span></a></li>
+        <li><a href="publications.html" data-org="er" style="--c:var(--er)"><span class="n mono">03</span><span class="pg">Publications</span><span class="on mono">Rough ER</span></a></li>
+        <li><a href="news.html" data-org="golgi" style="--c:var(--golgi)"><span class="n mono">04</span><span class="pg">News</span><span class="on mono">Golgi</span></a></li>
+        <li><a href="cv.html" data-org="centro" style="--c:var(--centro)"><span class="n mono">05</span><span class="pg">CV</span><span class="on mono">Centrosome</span></a></li>
+        <li><a href="life.html" data-org="lyso" style="--c:var(--lyso)"><span class="n mono">06</span><span class="pg">Beyond the Bench</span><span class="on mono">Lysosomes</span></a></li>
+        <li><a href="contact.html" data-org="membrane" style="--c:var(--mem)"><span class="n mono">07</span><span class="pg">Contact</span><span class="on mono">Membrane</span></a></li>
+      </ol>
     </nav>
+  </main>
+  <div class="zoom-veil" aria-hidden="true"></div>
 
-    <div class="footer">
-      © 2025 William Rosencrans
-    </div>
-  </div>
-
+  <script src="assets/cell.js"></script>
+  <script>Cell.build(document.getElementById('cell'));</script>
 </body>
 </html>
-

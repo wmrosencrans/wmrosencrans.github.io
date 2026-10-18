@@ -1,118 +1,138 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Curriculum Vitae – William Rosencrans</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f9fb;
-      color: #222;
-      margin: 0;
-      padding: 2em;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.3em;
-      margin-bottom: 0.5em;
-    }
-    h2 {
-      color: #007acc;
-      margin-top: 1.5em;
-    }
-    ul {
-      padding-left: 1.2em;
-      margin-bottom: 1em;
-    }
-    .download-btn {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #007acc;
-      color: white;
-      text-decoration: none;
-      border-radius: 6px;
-      font-weight: bold;
-    }
-    .download-btn:hover {
-      background-color: #005fa3;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>CV · William Rosencrans</title>
+  <meta name="description" content="Curriculum vitae of William Rosencrans: positions, education, awards, grants, teaching, and talks.">
+  <meta name="theme-color" content="#03050a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fell-canon.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
-  <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="research.html">Research</a>
-      <a href="cv.html">CV</a>
-    </nav>
+<body class="page" data-org="centro" style="--c:var(--centro)">
+  <header class="topbar">
+    <a class="home-link" href="index.html" aria-label="Back to the cell"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>William Rosencrans</span></a>
+    <nav class="onav" data-organelle-nav aria-label="Organelles"><a href="index.html">← Back to the cell</a></nav>
+  </header>
 
-    <h1>Curriculum Vitae</h1>
+  <main class="sheet">
+    <section class="hero">
+      <div>
+        <p class="kicker mono">05 · Centrosome</p>
+        <h1>CV</h1>
+        <p class="fn">The centrosome organizes the microtubules every other organelle travels along. Check out my track.</p>
+      </div>
+      <svg class="hero-art" data-art="centro" aria-hidden="true"></svg>
+    </section>
 
-    <p style="text-align:center;">
-      <a class="download-btn" href="CV_July2025.pdf" target="_blank">Download CV (PDF)</a>
-    </p>
+    <article class="content">
+      <p><a class="btn" href="WilliamRosencrans_CV.pdf" target="_blank" rel="noopener">Download full CV (PDF) ↓</a></p>
 
-    <h2>Education</h2>
-    <ul>
-      <li><strong>PhD in Biochemistry & Molecular Biophysics</strong>, California Institute of Technology — Expected 2025</li>
-      <li><strong>BA in Physics (minor in Biology)</strong>, Colgate University — 2019</li>
-    </ul>
+      <div class="section-h"><span class="mono">Positions</span><h2>Timeline</h2></div>
+      <ol class="timeline">
+        <li><span class="when mono">2025 – present</span><h3>NIH IRTA Postdoctoral Fellow</h3><p>National Institute of Neurological Disorders and Stroke, Bethesda, MD · Adviser: Richard Youle</p></li>
+        <li><span class="when mono">2020 – 2025</span><h3>NIH IRTA Graduate Researcher</h3><p>Caltech, Pasadena, CA · Advisers: David Chan, Tsui-Fen Chou, Richard Youle</p></li>
+        <li><span class="when mono">2019 – 2020</span><h3>NIH IRTA Post-Baccalaureate Fellow</h3><p>NICHD, Bethesda, MD · Advisers: Sergey Bezrukov, Tatiana Rostovtseva</p></li>
+        <li><span class="when mono">2017</span><h3>Visiting Undergraduate Researcher</h3><p>National University of Singapore · Adviser: Johan van der Maarel</p></li>
+        <li><span class="when mono">2015 – 2019</span><h3>Undergraduate Research Assistant</h3><p>Colgate University, Hamilton, NY · Adviser: Engda Hagos</p></li>
+        <li><span class="when mono">2013 – 2015</span><h3>High School Research Assistant</h3><p>Long Island University, Brookville, NY · Adviser: Theodore Brummel</p></li>
+      </ol>
 
-    <h2>Research Interests</h2>
-    <ul>
-      <li>Mitochondrial quality control and mitophagy</li>
-      <li>Ion channel biophysics (VDAC2)</li>
-      <li>Neurodegeneration: Parkinson’s and Alzheimer’s pathways</li>
-      <li>Single-molecule electrophysiology and protein–membrane interactions</li>
-    </ul>
+      <div class="section-h"><span class="mono">Research</span><h2>Research experience</h2></div>
+      <div class="card">
+        <span class="meta mono">CARD &amp; Youle Lab, NINDS, NIH · 2021 – present</span>
+        <h3>Autophagy, Golgi quality control, and drug discovery</h3>
+        <ul>
+          <li>Proposed and lead a small-molecule drug discovery program to develop autophagy-targeting chimeras (AutoTACs)</li>
+          <li>Lead a team of technicians, PhD students, postdocs, and contract research organizations</li>
+          <li>Ran several drug discovery campaigns, including virtual, DNA-encoded library, and biophysical screens</li>
+          <li>Carried out a hit-to-lead study identifying the first ligands to our protein target, and solved the first crystal structures of the target bound to small-molecule ligands</li>
+          <li>Developed sub-micromolar ligands to the autophagy initiation complex capable of rewiring autophagy</li>
+          <li>Discovered that the autophagy machinery is co-opted to shut down innate immune signaling by delivering STING from the Golgi to the lysosome</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="meta mono">Chou &amp; Chan Labs, Caltech · 2020 – 2025</span>
+        <h3>Pharmacological and cellular regulators of mitophagy</h3>
+        <ul>
+          <li>Showed that two clinical-stage mitophagy activators work by sensitizing cells to mitochondrial stress, not by directly activating PINK1/Parkin (<em>Science Advances</em>, 2025)</li>
+          <li>Characterized the lipid-tethering properties of the autophagy scaffold FIP200</li>
+          <li>Developed and characterized a fluorescent sensor for lysosome–mitochondria contact sites</li>
+          <li>Developed a mass-spectrometry method to identify proteins trafficking between organelles within the same cell</li>
+          <li>Used X-ray crystallography and protein NMR to map ligand binding sites</li>
+        </ul>
+      </div>
+      <div class="card">
+        <span class="meta mono">Section on Molecular Transport, NICHD, NIH · 2018 – 2020</span>
+        <h3>Mitochondrial channel biophysics</h3>
+        <ul>
+          <li>Single-molecule electrophysiology of VDAC isoforms and their regulation by α-synuclein, calcium, and drugs such as olesoxime and efsevin (<em>Science Advances</em>, 2025; <em>JBC</em>, 2026)</li>
+          <li>Built statistical-physics models and analysis pipelines for single-channel experiments</li>
+        </ul>
+      </div>
 
-    <h2>Recent Publications</h2>
-    <ul>
-      <li><strong>Conformational plasticity of mitochondrial VDAC2</strong>, Sci Adv (2025)</li>
-      <li><strong>VDAC regulation of calcium flux</strong>, Cell Calcium (2021)</li>
-      <li><strong>Mitophagy mechanisms and TNIP1</strong>, Thesis research (Caltech)</li>
-    </ul>
+      <div class="section-h"><span class="mono">Publications</span><h2>Recent first-author work</h2></div>
+      <div class="card"><ul>
+        <li>Rajendran M*, <strong>Rosencrans WM</strong>*, et al. Three mammalian VDAC isoforms distinctly regulate mitochondrial function and proteome to maintain cell metabolism. <em>J Biol Chem</em> 302, 111009 (2026). <a href="https://doi.org/10.1016/j.jbc.2025.111009" target="_blank" rel="noopener">DOI</a></li>
+        <li><strong>Rosencrans WM</strong>, et al. Putative PINK1/Parkin activators lower the threshold for mitophagy by sensitizing cells to mitochondrial stress. <em>Sci Adv</em> 11, eady0240 (2025). <a href="https://doi.org/10.1126/sciadv.ady0240" target="_blank" rel="noopener">DOI</a></li>
+        <li><strong>Rosencrans WM</strong>, et al. Conformational plasticity of mitochondrial VDAC2 controls the kinetics of its interaction with cytosolic proteins. <em>Sci Adv</em> 11, eadv4410 (2025). <a href="https://doi.org/10.1126/sciadv.adv4410" target="_blank" rel="noopener">DOI</a></li>
+        <li><strong>Rosencrans WM</strong>, Chan DC. Fusion activators enhance mitochondrial function. <em>Mitochondrial Commun</em> 1, 33–34 (2023). <a href="https://doi.org/10.1016/j.mitoco.2023.03.001" target="_blank" rel="noopener">DOI</a></li>
+      </ul>
+      <p style="margin:10px 0 0">*Equal contribution · <a href="publications.html">All publications →</a></p></div>
 
-    <h2>Professional Experience</h2>
-    <ul>
-      <li><strong>Graduate Researcher</strong>, Caltech — 2020–Present</li>
-      <li><strong>Postbac Fellow</strong>, NIH (VDAC and single-molecule research) — 2019–2020</li>
-    </ul>
+      <div class="section-h"><span class="mono">Education</span><h2>Degrees</h2></div>
+      <div class="card"><span class="meta mono">June 2025</span><h3>PhD, Biochemistry and Molecular Biophysics</h3><p>California Institute of Technology</p></div>
+      <div class="card"><span class="meta mono">May 2019</span><h3>BA, Physics (minor in Biology)</h3><p>Colgate University · exchange student at the National University of Singapore, 2017</p></div>
 
-    <h2>Skills</h2>
-    <ul>
-      <li>Single-molecule biophysics</li>
-      <li>Confocal microscopy, fluorescence imaging</li>
-      <li>Python, MATLAB, ImageJ, Prism</li>
-      <li>Scientific writing and data visualization</li>
-    </ul>
+      <div class="section-h"><span class="mono">Honors</span><h2>Selected awards</h2></div>
+      <div class="card"><ul>
+        <li><strong>5050 Fellow</strong>, Fifty Years, Cohort 8, 2026</li>
+        <li><strong>Student Bioenergeticist Award</strong>, Biophysical Society, 2023</li>
+        <li><strong>Jacobs Translational Medicine Fellowship</strong>, Caltech, 2020</li>
+        <li><strong>NSF GRFP Honorable Mention</strong>, 2020 and 2021</li>
+        <li><strong>NIH Oxford-Cambridge Scholars Program</strong>, selected (declined), 2020</li>
+        <li><strong>J. Amato and A. Aveni Award</strong> in physics research, Colgate, 2019</li>
+        <li><strong>Poster Meritorious Honors</strong>, AACR Annual Meeting, 2019</li>
+        <li><strong>Biophysical Society Travel Award</strong>, 2019</li>
+        <li><strong>NIH Post-Baccalaureate IRTA</strong>, 2018</li>
+      </ul></div>
 
-    <h2>Contact</h2>
-    <ul>
-      <li>Email: wmrosencrans [at] caltech.edu</li>
-      <li>Google Scholar: <a href="https://scholar.google.com/citations?user=KNgIb-QAAAAJ" target="_blank">View profile</a></li>
-    </ul>
-  </div>
+      <div class="section-h"><span class="mono">Funding</span><h2>Grants</h2></div>
+      <div class="card"><ul>
+        <li>Pharmacological targeting of Tau aggregates for autophagic removal, $2,810,983, 2022–2025</li>
+        <li>Development of MitoTAC compounds to treat Parkinson’s disease, The Merkin Institute for Translational Research, $400,000, 2023–2025</li>
+        <li>Uncovering the biochemical and structural basis of the VDAC–p97 interaction, The J. Yang and Family Foundation, $40,000, 2022</li>
+      </ul></div>
+
+      <div class="section-h"><span class="mono">Teaching</span><h2>Teaching</h2></div>
+      <div class="card"><ul>
+        <li><strong>Teaching Assistant</strong>, Caltech BBE: introductory biology and cellular microscopy; wrote assignments and developed microscopy labs (2021, 2024–2025)</li>
+        <li><strong>Tutor</strong>, Colgate Center for Learning, Teaching, and Research (2019)</li>
+        <li><strong>Lab Teaching Assistant</strong>, Colgate Biology (2017)</li>
+      </ul></div>
+
+      <div class="section-h"><span class="mono">Talks</span><h2>Selected presentations</h2></div>
+      <div class="card"><ul>
+        <li>Development of autophagy targeting chimeras (AutoTAC) · CARD Seminar, NIH, 2026</li>
+        <li>Stopping the STING: autophagy machinery in innate immune control · Scripps Research seminar, 2026</li>
+        <li>STING is suppressed by an ATG9A-ATG13-ATG101-dependent Golgi to lysosome degradation pathway to restrain chronic inflammation · Autophagy Gordon Research Conference, Ventura, CA, 2026 (invited)</li>
+        <li>The FIP200 CLAW domain functions as an anionic membrane tether · Biophysical Society, 2025</li>
+        <li>The mitochondrial VDAC isoforms: one molecule at a time · Biophysical Society award talk, 2023</li>
+        <li>A dynamic plasticity of VDAC2 revealed by single-molecule electrophysiology · Biophysical Society, 2020</li>
+        <li>VDAC isoforms in mitochondrial biology: why so similar, yet different? · NHLBI Mitochondrial Biology Symposium, 2019</li>
+        <li>KLF4 regulates metabolic homeostasis in response to energy stress · AACR Annual Meeting, 2019</li>
+      </ul></div>
+    </article>
+
+    <footer class="foot">
+      <a data-next href="index.html">← Back to the cell</a>
+      <span>© 2026 William Rosencrans</span>
+    </footer>
+  </main>
+
+  <script src="assets/cell.js"></script>
+  <script src="assets/site.js"></script>
 </body>
 </html>

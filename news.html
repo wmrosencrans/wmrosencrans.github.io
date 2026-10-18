@@ -1,83 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>News & Updates – William Rosencrans</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f9fb;
-      color: #222;
-      margin: 0;
-      padding: 2em;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: white;
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-    }
-    h1 {
-      text-align: center;
-      font-size: 2.3em;
-      margin-bottom: 1em;
-    }
-    .update {
-      margin-bottom: 1.4em;
-      border-left: 4px solid #007acc;
-      padding-left: 1em;
-    }
-    .update-date {
-      font-weight: bold;
-      color: #444;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>News · William Rosencrans</title>
+  <meta name="description" content="News and updates from William Rosencrans.">
+  <meta name="theme-color" content="#03050a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fell-canon.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
-  <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="research.html">Research</a>
-      <a href="cv.html">CV</a>
-      <a href="news.html">News</a>
-    </nav>
+<body class="page" data-org="golgi" style="--c:var(--golgi)">
+  <header class="topbar">
+    <a class="home-link" href="index.html" aria-label="Back to the cell"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>William Rosencrans</span></a>
+    <nav class="onav" data-organelle-nav aria-label="Organelles"><a href="index.html">← Back to the cell</a></nav>
+  </header>
 
-    <h1>News & Updates</h1>
+  <main class="sheet">
+    <section class="hero">
+      <div>
+        <p class="kicker mono">04 · Golgi apparatus</p>
+        <h1>News</h1>
+        <p class="fn">The Golgi packages cargo into vesicles and ships it out to the rest of the cell. Here’s what’s shipping.</p>
+      </div>
+      <svg class="hero-art" data-art="golgi" aria-hidden="true"></svg>
+    </section>
 
-    
-<!--     <div class="update">
-      <div class="update-date">🧪 July 2025</div>
-      <p>CV updated with new publication: “Conformational Plasticity of VDAC2”.</p>
-    </div> -->
+    <article class="content">
+      <!-- Add new items at the top. Each <li> is one vesicle leaving the Golgi. -->
+      <ol class="timeline">
+        <li>
+          <span class="when mono">2026</span>
+          <h3>Invited talk at the Autophagy Gordon Research Conference</h3>
+          <p>Spoke in Ventura, CA on how STING is suppressed by an ATG9A-ATG13-ATG101-dependent Golgi-to-lysosome degradation pathway that restrains chronic inflammation.</p>
+        </li>
+        <li>
+          <span class="when mono">January 2026</span>
+          <h3>VDAC isoforms paper in <em>JBC</em></h3>
+          <p>Our co-first-author study showing that the three mammalian VDAC isoforms distinctly regulate mitochondrial function, the proteome, and cell metabolism is out in the <em>Journal of Biological Chemistry</em>. <a href="https://doi.org/10.1016/j.jbc.2025.111009" target="_blank" rel="noopener">Read it</a>.</p>
+        </li>
+        <li>
+          <span class="when mono">August 2025</span>
+          <h3>Parkinson’s drug candidates aren’t what they seem</h3>
+          <p>Our <em>Science Advances</em> paper found that two reported PINK1/Parkin activators boost mitophagy by mildly poisoning mitochondria rather than by activating the pathway directly. Covered by <a href="https://www.caltech.edu/about/news/parkinsons-disease-drug-candidates-induce-unexpected-damaging-effects" target="_blank" rel="noopener">Caltech News</a>, <a href="https://medicalxpress.com/news/2025-08-parkinson-disease-drug-candidates-unexpected.html" target="_blank" rel="noopener">Medical Xpress</a>, and the <a href="https://www.cheninstitute.org/news/parkinsons-disease-drug-candidates-induce-unexpected-damaging-effects" target="_blank" rel="noopener">Chen Institute</a>. <a href="https://doi.org/10.1126/sciadv.ady0240" target="_blank" rel="noopener">Read the paper</a>.</p>
+        </li>
+        <li>
+          <span class="when mono">June 2025</span>
+          <h3>Back to the NIH</h3>
+          <p>Now as a postdoc, continuing my work in Richard Youle’s lab at NINDS.</p>
+        </li>
+        <li>
+          <span class="when mono">June 2025</span>
+          <h3>PhD, Caltech</h3>
+          <p>Graduated with a PhD in Biochemistry and Molecular Biophysics after defending my thesis, <em>Mechanisms of Pharmacological and Cellular Regulators of Mitophagy</em>.</p>
+        </li>
+        <li>
+          <span class="when mono">April 2025</span>
+          <h3>VDAC2 paper out in <em>Science Advances</em></h3>
+          <p>Our study of how VDAC2’s conformational plasticity controls its interactions with cytosolic proteins is published. <a href="https://pubmed.ncbi.nlm.nih.gov/40267181/" target="_blank" rel="noopener">Read it</a>.</p>
+        </li>
+        <li>
+          <span class="when mono">2023</span>
+          <h3>Student Bioenergeticist Award</h3>
+          <p>Recognized by the Biophysical Society for contributions to mitochondrial biophysics, with an award talk: “The mitochondrial VDAC isoforms: one molecule at a time.”</p>
+        </li>
+        <li>
+          <span class="when mono">December 2020</span>
+          <h3>Featured by Colgate</h3>
+          <p>Colgate profiled how my undergraduate research, from Singapore to the NIH, led into my PhD work on mitophagy. <a href="https://www.colgate.edu/news/stories/william-rosencrans-19-draws-colgate-research-experiences-inform-new-investigations" target="_blank" rel="noopener">Read the story</a>.</p>
+        </li>
+      </ol>
+    </article>
 
-    <div class="update">
-      <div class="update-date">📢 April 2025</div>
-      <p>Our VDAC2 dynamics paper is out in Science Advances! </p>
-    </div>
+    <footer class="foot">
+      <a data-next href="index.html">← Back to the cell</a>
+      <span>© 2026 William Rosencrans</span>
+    </footer>
+  </main>
 
-    <div class="update">
-      <div class="update-date">📄 June  2025</div>
-      <p>Graduated from Caltech with a PhD in Biochemistry and Molecular Biophysics after successfully defending my thesis: Mechanisms of Pharmacological and Cellular Regulators of Mitophagy </p>
-    </div>
-
-    <div class="update">
-      <div class="update-date">🧬 June 2025</div>
-      <p>Back to the NIH, now as a post-doc continuing my work in Richard Youle's lab</p>
-    </div>
-  </div>
+  <script src="assets/cell.js"></script>
+  <script src="assets/site.js"></script>
 </body>
 </html>

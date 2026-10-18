@@ -1,134 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Research – William Rosencrans</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f9fb;
-      color: #222;
-      padding: 2em;
-      margin: 0;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-    }
-    h1 {
-      font-size: 2.5em;
-      text-align: center;
-      margin-bottom: 1em;
-    }
-    .pub {
-      margin-bottom: 1.8em;
-    }
-    .year {
-      color: #666;
-      font-size: 0.9em;
-    }
-    .pub a.title {
-      color: #007acc;
-      text-decoration: none;
-      font-weight: 600;
-    }
-    .pub a.title:hover {
-      text-decoration: underline;
-    }
-    .footer {
-      text-align: center;
-      font-size: 0.9em;
-      margin-top: 2em;
-      color: #999;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Research · William Rosencrans</title>
+  <meta name="description" content="Research by William Rosencrans: Golgi quality control and innate immunity, rewiring autophagy with small molecules, mitophagy pharmacology, and mitochondrial biophysics.">
+  <meta name="theme-color" content="#03050a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fell-canon.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="page" data-org="mito" style="--c:var(--mito)">
+  <header class="topbar">
+    <a class="home-link" href="index.html" aria-label="Back to the cell"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>William Rosencrans</span></a>
+    <nav class="onav" data-organelle-nav aria-label="Organelles"><a href="index.html">← Back to the cell</a></nav>
+  </header>
 
-  <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="news.html">News</a>
-      <a href="research.html">Research</a>
-    <a href="CV_July2025.pdf" target="_blank">CV</a>
+  <main class="sheet">
+    <section class="hero">
+      <div>
+        <p class="kicker mono">02 · Mitochondria</p>
+        <h1>Research</h1>
+        <p class="fn">Mapping how cells sort, recycle, and destroy their own parts, and building small molecules that rewire that machinery against disease.</p>
+      </div>
+      <svg class="hero-art" data-art="mito" aria-hidden="true"></svg>
+    </section>
 
-    </nav>
+    <article class="content">
+      <p>The most intractable diseases of our time, from Alzheimer’s and Parkinson’s to ALS, share a common thread: cells that can no longer clean house. Damaged proteins and organelles accumulate, homeostasis deteriorates, and chronic inflammation can set off a vicious cycle of degeneration. I want to understand how cells decide what to repair, what to throw out, how they take out the trash, and then control those decisions with small molecules.</p>
 
-    <h1>Research Publications</h1>
+      <div class="section-h"><span class="mono">Now</span><h2>Current projects</h2></div>
 
-    <div class="pub">
-      <a class="title"
-         href="https://pubmed.ncbi.nlm.nih.gov/40267181/"
-         target="_blank">
-        Conformational plasticity of mitochondrial VDAC2 controls the kinetics of its interaction with cytosolic proteins
-      </a>
-      <div class="year">(Apr 2025, Sci Adv · PMID: 40267181)</div>
-      A single-molecule electrophysiology study showing how VDAC2's conformational dynamics regulate its binding with α‑synuclein :contentReference[oaicite:1]{index=1}.
-    </div>
+      <div class="card" style="--c:var(--golgi)">
+        <span class="meta mono">Golgi quality control · Youle Lab, NINDS &amp; Chou Lab, Caltech</span>
+        <h3>How the autophagy machinery shuts down an immune alarm</h3>
+        <p>The autophagy machinery is best known for building autophagosomes, which engulf cellular waste and carry it to the lysosome. We found that cells co-opt this same machinery for an entirely different job: switching off innate immune signaling.</p>
+        <p>STING is one of the cell’s alarms. It goes off when DNA shows up where it shouldn’t, a sign of infection or damage. Just like turning off the fire alarm when the threat is gone so we can go back into the office, cells need to silence STING to get back to their normal work. We discovered that the autophagy machinery does this by delivering activated STING from the Golgi to the endolysosome for destruction. When that delivery fails, STING keeps signaling and cells are left in a constant inflammatory state.</p>
+        <p>This opens up a series of questions I am currently pursuing:</p>
+        <ul>
+          <li>What else does the cell send down this route from the Golgi to the lysosome?</li>
+          <li>How does it go awry in neurodegeneration, autoimmunity, and cancer?</li>
+          <li>Can we drug it?</li>
+        </ul>
+      </div>
 
-    <div class="pub">
-      <a class="title"
-         href="https://biorxiv.org/content/10.1101/2024.11.08.622687v1"
-         target="_blank">
-        Conformational plasticity of mitochondrial VDAC2 controls the kinetics of its interaction with cytosolic proteins (preprint)
-      </a>
-      <div class="year">(Nov 2024, bioRxiv)</div>
-      Early-stage version of the study, with detailed electrophysiological and structural data :contentReference[oaicite:2]{index=2}.
-    </div>
+      <div class="card">
+        <span class="meta mono">Drug discovery · CARD, NINDS · 2021–present</span>
+        <h3>Rewiring autophagy with small molecules</h3>
+        <p>Autophagy is uniquely important in long-lived, non-dividing neurons, yet the machinery has remained exceptionally difficult to drug. It works inside the cell, largely through transient protein–protein and protein–membrane interactions, with few conventionally druggable enzymes. Drugging members of this pathway is a challenge, but also an opportunity to expand therapeutically targetable space.</p>
+        <p>At the Center for Alzheimer’s and Related Dementias, I initiated and lead a program to rewire the autophagy machinery with small molecules. Along the way I have run several drug discovery campaigns. This has led me and the group to think about clever ways to hasten this expensive and time-consuming endeavor. The goal is brain-penetrant chemical matter that restores cellular recycling and protects vulnerable neurons.</p>
+      </div>
 
-    <div class="pub">
-      <a class="title"
-         href="https://pubmed.ncbi.nlm.nih.gov/33529977/"
-         target="_blank">
-        VDAC regulation of mitochondrial calcium flux: From channel biophysics to disease
-      </a>
-      <div class="year">(Mar 2021, Cell Calcium · PMID: 33529977)</div>
-      A comprehensive review linking channel properties of VDAC isoforms to their roles in calcium transport and pathology :contentReference[oaicite:3]{index=3}.
-    </div>
+      <div class="section-h"><span class="mono">Recent</span><h2>How mitophagy drugs actually work</h2></div>
+      <p>Activating PINK1/Parkin mitophagy, the removal of damaged mitochondria, is one of the leading strategies for treating Parkinson’s disease. For my PhD with Tsui-Fen Chou and David Chan at Caltech, I asked how two reported activators of the pathway actually work. Both increased mitophagy, but not by activating PINK1 or Parkin directly. Instead, they behaved as weak mitochondrial toxins that sensitize cells to stress. It’s a bit like smashing a broken appliance into smaller pieces when what you really want is to have it hauled away. The lesson for drug discovery is that our screens need to detect the difference between enhancing the hormetic response vs triggering it via damage. <a href="https://doi.org/10.1126/sciadv.ady0240" target="_blank" rel="noopener"><em>Science Advances</em>, 2025</a> · <a href="https://www.caltech.edu/about/news/parkinsons-disease-drug-candidates-induce-unexpected-damaging-effects" target="_blank" rel="noopener">Caltech news</a></p>
+      <p>I also contributed to work showing how the immune regulator TNIP1 puts the brakes on selective autophagy (<a href="https://doi.org/10.1016/j.molcel.2023.02.023" target="_blank" rel="noopener"><em>Molecular Cell</em>, 2023</a>).</p>
+      <div class="section-h"><span class="mono">Roots</span><h2>Mitochondrial channels, one molecule at a time</h2></div>
+      <p>At the NIH (NICHD) with Sergey Bezrukov and Tatiana Rostovtseva, I used single-molecule electrophysiology to study the <strong>voltage-dependent anion channel (VDAC)</strong>, the main gateway for metabolites and calcium across the mitochondrial outer membrane. We showed how VDAC2’s conformational plasticity controls its interactions with cytosolic proteins (<a href="https://doi.org/10.1126/sciadv.adv4410" target="_blank" rel="noopener"><em>Science Advances</em>, 2025</a>) and how the three VDAC isoforms distinctly shape mitochondrial function and metabolism (<a href="https://doi.org/10.1016/j.jbc.2025.111009" target="_blank" rel="noopener"><em>JBC</em>, 2026</a>). We also studied how the protein α-synuclein and drugs such as olesoxime and efsevin regulate the channel.</p>
 
-    <div class="pub">
-      <a class="title"
-         href="https://pubmed.ncbi.nlm.nih.gov/33529977/"
-         target="_blank">
-        α‑Synuclein as a regulator of VDAC‑facilitated calcium transport
-      </a>
-      <div class="year">(2021)</div>
-      Demonstrates α‑synuclein’s modulation of VDACs affecting mitochondrial calcium signaling and its relevance to Parkinson’s biology:contentReference[oaicite:4]{index=4}.
-    </div>
+      <div class="section-h"><span class="mono">Earlier</span><h2>Across scales</h2></div>
+      <div class="grid-2">
+        <div class="card"><span class="meta mono">Colgate · Hagos lab</span><h3>KLF4 and mitophagy</h3><p>Showed that cells lacking the transcription factor KLF4 have mitochondrial dysfunction and impaired mitophagy.</p></div>
+        <div class="card"><span class="meta mono">NUS, Singapore · van der Maarel lab</span><h3>Chromatin in nanochannels</h3><p>Single-molecule imaging and polymer-physics modeling of megabase-long chromatin confined to nanofluidic channels.</p></div>
+        <div class="card" style="grid-column: 1 / -1"><span class="meta mono">Long Island University · Brummel lab</span><h3>Where it started</h3><p>As a high-school researcher, I used stable-isotope mass spectrometry in <em>Drosophila</em> to detect changes in mTOR signaling and autophagy.</p></div>
+      </div>
 
-    <div class="pub">
-      <a class="title"
-         href="https://doi.org/10.1016/j.bpj.2022.11.012"
-         target="_blank">
-        Defining the roles and regulation of the mitochondrial VDAC isoforms one molecule at a time
-      </a>
-      <div class="year">(2022‑23, Biophysical Journal)</div>
-      Single-molecule analysis of mitochondrial VDAC isoforms, characterizing structure-function relationships:contentReference[oaicite:5]{index=5}.
-    </div>
+      <div class="section-h"><span class="mono">Toolkit</span><h2>Methods</h2></div>
+      <ul class="chips">
+        <li>Single-molecule electrophysiology</li><li>Cell biology</li><li>Protein biochemistry</li>
+        <li>Planar lipid bilayers</li><li>X-ray crystallography</li><li>Protein NMR</li><li>Mass-spec proteomics</li>
+        <li>Confocal &amp; fluorescence microscopy</li><li>Hit-to-lead drug discovery</li><li>Statistical-physics modeling</li><li>Python · MATLAB</li>
+      </ul>
+    </article>
 
-    <p>📚 View the full list on
-      <a href="https://scholar.google.com/citations?user=KNgIb-QAAAAJ&hl=en"
-         target="_blank">Google Scholar profile</a>.
-    </p>
+    <footer class="foot">
+      <a data-next href="index.html">← Back to the cell</a>
+      <span>© 2026 William Rosencrans</span>
+    </footer>
+  </main>
 
-    <div class="footer">© 2025 William Rosencrans</div>
-  </div>
-
+  <script src="assets/cell.js"></script>
+  <script src="assets/site.js"></script>
 </body>
 </html>

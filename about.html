@@ -1,75 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>About – William Rosencrans</title>
-  <style>
-    body {
-      font-family: 'Segoe UI', sans-serif;
-      background: #f7f9fb;
-      color: #222;
-      padding: 2em;
-      margin: 0;
-    }
-    .container {
-      max-width: 800px;
-      margin: auto;
-      background: #fff;
-      padding: 2em;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
-    }
-    nav {
-      text-align: center;
-      margin-bottom: 2em;
-    }
-    nav a {
-      margin: 0 12px;
-      text-decoration: none;
-      color: #007acc;
-      font-weight: bold;
-    }
-    h1 {
-      font-size: 2.5em;
-      text-align: center;
-    }
-    p { margin-bottom: 1.4em; }
-    .footer {
-      text-align: center;
-      font-size: 0.9em;
-      margin-top: 2em;
-      color: #999;
-    }
-  </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>About · William Rosencrans</title>
+  <meta name="description" content="About William Rosencrans: scientist studying autophagy, mitochondrial homeostasis, and drug discovery for neurodegenerative disease.">
+  <meta name="theme-color" content="#03050a">
+  <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+  <link rel="preload" href="assets/fonts/fell-canon.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/atkinson-next.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/style.css">
 </head>
-<body>
+<body class="page" data-org="nucleus" style="--c:var(--nuc)">
+  <header class="topbar">
+    <a class="home-link" href="index.html" aria-label="Back to the cell"><img src="assets/favicon.svg" alt="" width="30" height="30"><span>William Rosencrans</span></a>
+    <nav class="onav" data-organelle-nav aria-label="Organelles"><a href="index.html">← Back to the cell</a></nav>
+  </header>
 
-  <div class="container">
-    <nav>
-      <a href="index.html">Home</a>
-      <a href="about.html">About</a>
-      <a href="research.html">Research</a>
-      <a href="CV_July2025.pdf" target="_blank">CV</a>
+  <main class="sheet">
+    <section class="hero">
+      <div>
+        <p class="kicker mono">01 · Nucleus</p>
+        <h1>About</h1>
+        <p class="fn">What’s in the genes? A little about my background and mission.</p>
+      </div>
+      <svg class="hero-art" data-art="nucleus" aria-hidden="true"></svg>
+    </section>
 
-    </nav>
+    <article class="content">
+      <div class="about-grid">
+        <aside>
+          <figure class="portrait"><img src="assets/william.jpg" alt="Portrait of William Rosencrans" width="532" height="800"></figure>
+          <ul class="facts">
+            <li><span class="mono">Now</span>Postdoctoral Fellow, Youle Lab<br>NINDS, NIH · Bethesda, MD</li>
+            <li><span class="mono">PhD</span>Biochemistry &amp; Molecular Biophysics, Caltech, 2025</li>
+            <li><span class="mono">BA</span>Physics (minor in Biology), Colgate, 2019</li>
+            <li><span class="mono">From</span>Long Island, NY</li>
+          </ul>
+        </aside>
+        <div>
+          <p>Welcome! My name is Will (William) Rosencrans, and I’m a scientist broadly interested in nature across scales. A native of Long Island, NY, I moved to the West Coast for my PhD at the California Institute of Technology (Caltech). I’m now a postdoctoral fellow in the lab of Dr. Richard Youle at the National Institute of Neurological Disorders and Stroke (NINDS, NIH).</p>
+          <p>My work focuses on the biophysics and biochemistry of <strong>autophagy</strong> and <strong>mitochondrial homeostasis</strong>, and on using those insights to develop therapeutics for diseases of aging. During my PhD I was advised by Professors Tsui-Fen Chou and David Chan, and by Dr. Richard Youle. I initiated and lead a small-molecule drug discovery initiative at the Center for Alzheimer’s and Related Dementias (CARD). My work has appeared in <a href="publications.html">peer-reviewed publications</a> and in-progress patents.</p>
+          <p>My current modalities center on small-molecule drugs targeting new biological pathways, but I’m constantly enthralled by other platforms that can leverage and control biological processes to expand therapeutically targetable space. To that end, I’ve spent time running drug discovery campaigns, always thinking about clever ways to speed up this expensive and time-consuming endeavor.</p>
 
-    <h1>About Me</h1>
-    <p>
-Welcome! 
+          <blockquote class="pull">It is in the process of translating basic discoveries into rigorously tested therapeutics that new basic discoveries are often found.</blockquote>
 
-    My name is Will (William) Rosencrans, and I am a scientist broadly interested in nature across scales.  Native of Long Island, NY, I moved to the West Coast to pursue my PhD at the California Institute of Technology (Caltech). My current focus is on the biophysics and biochemistry of autophagy and mitochondrial homeostasis. Using these insights, I work on development of therapeutics targeting these processes in the disease of aging. I am currently a post-doctoral fellow in the lab of Dr. Richard Youle, at the National Institute of Neurological Disorders and Stroke (NINDS,NIH)
-      Prior to this, I was a PhD student at Caltech advised by Professors Tsui-Fen Chou and David Chan, and by Dr. Richard Youle. I initiated and currently lead the Center for Alzheimer’s and Related Dementia’s (CARD) AutoTAC initiative. My work has been published in multiple peer-reviewed publications, in-progress patents, and even some minor features. My current modalities center around small-molecule drugs targeting new biological pathways. 
-       I am constantly enthralled by the possibilities of other platforms that can leverage and control biological processes to expand therapeutically targetable space. 
-  <p>
-    To this end, I have spent time carrying out drug discovery campaigns and always thinking about clever ways to optimize and hasten this expensive and time-consuming endeavor.  
-       Translational research and drug discovery are often thought of as separate domains from “basic research.” It is in the process of translating basic discoveries to rigorously tested therapeutics that basic discoveries can often be found. This virtuous cycle expands our knowledge of biology and in turn makes concrete improvements in human health. This philosophy compels me to study the basic biology governing autophagy initiation and mitochondrial stress pathways. My work has discovered novel regulators of the autophagy initiation machinery and mediators of mitochondrial biology. I have recently become interested in the interplay between these pathways and the innate immune system.  
+          <p>Translational research and drug discovery are often thought of as separate from “basic research.” I see them as a virtuous cycle that expands our knowledge of biology and, in turn, makes concrete improvements in human health. That philosophy compels me to study the basic biology governing autophagy initiation and mitochondrial stress pathways. My work has uncovered novel regulators of the autophagy initiation machinery and mediators of mitochondrial biology, and that interest has grown into two projects I lead now: how cells co-opt the autophagy machinery to shut down the immune sensor STING by delivering it from the Golgi to the lysosome, and rewiring the autophagy machinery with small molecules. <a href="research.html">More on my Research page</a>.</p>
+          <p>Before biochemistry, I studied physics at Colgate University, where I tried my hand at pure optics research. Moving into biology, I worked on transcriptional control of mitochondrial homeostasis and mitophagy, with a short stint in Singapore investigating the biophysics of chromatin.</p>
+          <p>Beyond science, I’m into history, writing poetry, cooking, hiking, and tea. More on that in <a href="life.html">Beyond the Bench</a>.</p>
+        </div>
+      </div>
+    </article>
 
-    <p>  Prior to entering biochemistry, I had studied physics at Colgate University, where I tried my hand at pure optics research. Moving into biology I worked on transcriptional control of mitochondrial homeostasis and mitophagy. I also had a short stint in Singapore, investigating the biophysics of chromatin.  
+    <footer class="foot">
+      <a data-next href="index.html">← Back to the cell</a>
+      <span>© 2026 William Rosencrans</span>
+    </footer>
+  </main>
 
- <p> Beyond science, I am particularly interested in history, especially of those periods and places I know previously little about. I enjoy cooking dishes from around the world, hiking, and drinking tea! 
-    <div class="footer">© 2025 William Rosencrans</div>
-  </div>
-
+  <script src="assets/cell.js"></script>
+  <script src="assets/site.js"></script>
 </body>
 </html>
