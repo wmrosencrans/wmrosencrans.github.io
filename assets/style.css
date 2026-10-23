@@ -318,7 +318,8 @@ html.intro .intro-screen {
 }
 .scope-art {
   height: min(56vh, 500px); width: auto; max-width: 94vw; overflow: visible; cursor: pointer;
-  transition: transform .95s cubic-bezier(.55, 0, .85, .35), opacity .35s ease .6s;
+  transition: opacity .35s ease .6s;
+  shape-rendering: geometricPrecision;
 }
 .scope-lens { transition: filter .25s ease; }
 .scope-art:hover .scope-lens, .scope-enter:hover ~ * .scope-lens { filter: drop-shadow(0 0 6px #3fe3ea) brightness(1.4); }
@@ -345,7 +346,7 @@ html.intro .intro-screen {
 
 .intro-screen.entering { background: var(--bg); }
 .intro-screen.entering .intro-copy { opacity: 0; }
-.intro-screen.entering .scope-art { transform: scale(var(--zoom, 12)); opacity: 0; }
+.intro-screen.entering .scope-art { opacity: 0; }
 .stage.revealing {
   z-index: 50; background: var(--bg);
   clip-path: circle(0 at var(--rx) var(--ry));

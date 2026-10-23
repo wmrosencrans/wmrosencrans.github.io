@@ -24,6 +24,24 @@
     window.dispatchEvent(new Event('resize'));
   }
 
+  // Zoom by animating the SVG's viewBox rather than a CSS transform, so the
+  // vector drawing is re-rendered crisply at every frame instead of a bitmap
+  // snapshot being stretched. (sx, sy) is the screen point that stays fixed.
+  function zoomViewBox(sx, sy, zoom, dur) {
+    var vb = art.viewBox.baseVal, x = vb.x, y = vb.y, w = vb.width, h = vb.height;
+    var r = art.getBoundingClientRect();
+    var s = Math.min(r.width / w, r.height / h);                       // preserveAspectRatio: meet
+    var ox = r.left + (r.width - w * s) / 2, oy = r.top + (r.height - h * s) / 2;
+    var ux = x + (sx - ox) / s, uy = y + (sy - oy) / s;                 // anchor in drawing units
+    var fx = (ux - x) / w, fy = (uy - y) / h, t0 = performance.now();
+    (function step(now) {
+      var k = Math.min(1, (now - t0) / dur), e = k * k * k;            // accelerate into the eyepieces
+      var zk = Math.pow(zoom, e), ww = w / zk, hh = h / zk;
+      art.setAttribute('viewBox', (ux - fx * ww).toFixed(3) + ' ' + (uy - fy * hh).toFixed(3) + ' ' + ww.toFixed(3) + ' ' + hh.toFixed(3));
+      if (k < 1) requestAnimationFrame(step);
+    })(t0);
+  }
+
   function enter() {
     if (entered) return;
     entered = true;
@@ -42,10 +60,10 @@
       var r = el.getBoundingClientRect();
       x0 = Math.min(x0, r.left); y0 = Math.min(y0, r.top); x1 = Math.max(x1, r.right); y1 = Math.max(y1, r.bottom); lw = Math.max(lw, r.width);
     });
-    var ex = (x0 + x1) / 2, ey = (y0 + y1) / 2, l = { width: lw };
-    art.style.transformOrigin = (ex - a.left) + 'px ' + (ey - a.top) + 'px';
-    art.style.setProperty('--zoom', Math.min(60, 1.3 * Math.max(innerWidth, innerHeight) / Math.max(l.width, 8)).toFixed(1));
+    var ex = (x0 + x1) / 2, ey = (y0 + y1) / 2;
+    var zoom = Math.min(60, 1.3 * Math.max(innerWidth, innerHeight) / Math.max(lw, 8));
     screen.classList.add('entering');
+    zoomViewBox(ex, ey, zoom, 950);
 
     // 2. Open the field of view onto the cell, coming into focus.
     setTimeout(function () {
