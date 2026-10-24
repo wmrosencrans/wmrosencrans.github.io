@@ -30,7 +30,7 @@
       fn: 'The centrosome organizes the microtubules every other organelle travels along. Check out my track record.',
       zoom: [640, 330, 160], label: [636, 398] },
     { id: 'lyso', name: 'Lysosomes', page: 'Beyond the Bench', href: 'life.html', color: C.lyso,
-      fn: 'Outside the lab',
+      fn: 'A little collection of what’s going on when I am not at the bench.',
       zoom: [420, 170, 200], label: [420, 236] },
     { id: 'membrane', name: 'Plasma membrane', page: 'Contact', href: 'contact.html', color: C.mem,
       fn: 'Receptors on the plasma membrane are how a cell hears from the outside world. Send a signal!',
@@ -650,12 +650,13 @@
       transform: 'translate(500 500) scale(0.982) translate(-500 -500)' }, memA);
     var memHit = el('path', { d: d0, class: 'hit hit-stroke' }, memA);
     // receptors all around the membrane, with a denser patch by the Contact label
+    var RSLOT = 54;                                   // top of the cell: the receptor that turns over
     var recIdx = [], recScale = [], receptors = [], rr0 = rng(55);
     for (var ri = 0; ri < 9; ri++) { recIdx.push(Math.round((118 + ri * 3.6) / 360 * 72) % 72); recScale.push(1.15); }
     for (var rj = 0; rj < 72; rj += 3) {
       var deg = rj / 72 * 360;
       if (deg > 108 && deg < 156) continue;
-      if (rr0() < 0.25) continue;                       // irregular spacing
+      if (rr0() < 0.25 || rj === RSLOT) continue;       // irregular spacing; RSLOT is the cycling one
       recIdx.push(rj); recScale.push(0.75 + rr0() * 0.35);
     }
     recIdx.forEach(function (idx, k) { receptors.push(drawReceptor(memA, 0, 0, 0, recScale[k])); });
@@ -666,6 +667,166 @@
       });
     }
     placeReceptors(pts0);
+
+    // Receptor turnover. One receptor is taken up by clathrin-mediated endocytosis
+    // (its ligand-binding end faces the pit, then the vesicle lumen: topologically
+    // outside), uncoats, and is delivered to a lysosome and degraded. A replacement
+    // is made at the ER (binding end in the ER lumen), goes ER -> Golgi -> plasma
+    // membrane, and when its vesicle fuses the lumen opens outward, so the binding
+    // end faces out again in the same spot.
+    var RLYSO = [420, 170], RPERIOD = 22;
+    var rg = el('g', { class: 'deco' }, svg);
+    var pitMask = el('path', { fill: 'none', stroke: '#221b3d', 'stroke-width': 5.5, 'stroke-linecap': 'butt' }, rg);
+    var pit = el('path', { fill: 'none', stroke: C.mem, 'stroke-width': 3, 'stroke-linecap': 'round' }, rg);
+    var coat = el('path', { fill: 'none', stroke: '#dfe6f5', 'stroke-width': 2.2, 'stroke-dasharray': '2 2.6', 'stroke-linecap': 'round' }, rg);
+    var eVes = el('circle', { r: 11, fill: 'rgba(180,156,255,.08)', stroke: C.mem, 'stroke-width': 1.6, opacity: 0 }, rg);
+    var eCoat = el('circle', { r: 13.5, fill: 'none', stroke: '#dfe6f5', 'stroke-width': 2, 'stroke-dasharray': '2 2.6', opacity: 0 }, rg);
+    var sVes = el('circle', { r: 11, fill: 'rgba(255,255,255,.05)', stroke: '#f3eadf', 'stroke-width': 1.5, opacity: 0 }, rg);
+    var rFlash = el('circle', { cx: RLYSO[0], cy: RLYSO[1], r: 20, fill: 'none', stroke: C.lyso, 'stroke-width': 2, opacity: 0 }, rg);
+    var oldRec = drawReceptor(rg, 0, 0, 0, 1), newRec = drawReceptor(rg, 0, 0, 0, 1);
+    // Bent form for thin lumens (ER, Golgi): local x runs along the membrane, +y is
+    // the cytosol. The TM stem crosses the membrane band, then the Y lies in the lumen.
+    var bent = el('g', { stroke: '#e3d9ff', 'stroke-width': 1.25, 'stroke-linecap': 'round', 'stroke-linejoin': 'round', fill: 'none', opacity: 0 }, rg);
+    el('path', { d: 'M0,4.6 L0,-3.3 L5.5,-3.3 M5.5,-3.3 L9.6,-1.7 M5.5,-3.3 L9.6,-4.9' }, bent);
+    el('circle', { cx: 9.6, cy: -1.7, r: 1, fill: C.mem, stroke: 'none' }, bent);
+    el('circle', { cx: 9.6, cy: -4.9, r: 1, fill: C.mem, stroke: 'none' }, bent);
+    function setBent(M, t, n, op) {
+      bent.setAttribute('transform', 'matrix(' + [t[0], t[1], n[0], n[1], M[0], M[1]].map(function (v) { return v.toFixed(3); }).join(' ') + ')');
+      bent.setAttribute('opacity', f(op));
+    }
+    // an ER sheet point a little way along sheet 0, with its tangent and outward normal
+    var sh0 = erSheets()[0], ek = 0, eb = 9;
+    sh0.forEach(function (q, i) { var a = Math.atan2(q[1], q[0]); if (Math.abs(a + 2 * D) < eb) { eb = Math.abs(a + 2 * D); ek = i; } });
+    ek = Math.max(2, Math.min(sh0.length - 3, ek));
+    var eq = sh0[ek], eq0 = sh0[ek - 1], eq1 = sh0[ek + 1];
+    var etx = eq1[0] - eq0[0], ety = eq1[1] - eq0[1], etl = Math.hypot(etx, ety); etx /= etl; ety /= etl;
+    var enx = ety, eny = -etx;
+    if (enx * eq[0] + eny * eq[1] < 0) { enx = -enx; eny = -eny; }
+    // ER sheets are drawn 9 wide with a ~4 wide lumen: put the TM stem in the outer
+    // membrane band and lay the Y along the lumen, tipped slightly inward
+    var ER_M = [440 + eq[0] + enx * 3.3, 470 + eq[1] + eny * 3.3];
+    var ER_M_BAND = [440 + eq[0] + enx * 3.3, 470 + eq[1] + eny * 3.3];  // middle of the outer membrane band
+    var ER_EXIT = [ER_M[0] + enx * 10, ER_M[1] + eny * 10];
+    var GA = -84 * D, GC = [640, 330];
+    var R_CIS = [GC[0] + Math.cos(GA) * 72, GC[1] + Math.sin(GA) * 72], R_TRANS = [GC[0] + Math.cos(GA) * 162, GC[1] + Math.sin(GA) * 162];
+    function setRec(r, x, y, dir, sc, op) {
+      r.setAttribute('transform', 'translate(' + f(x) + ' ' + f(y) + ') rotate(' + f(dir / D + 90) + ') scale(' + f(sc) + ')');
+      r.setAttribute('opacity', f(op));
+    }
+    // Place a receptor whose transmembrane stem crosses the membrane at M, with the
+    // Y (ligand-binding domain) pointing along `dir` into the lumen / extracellular side.
+    function anchor(r, M, dir, sc, op) {
+      setRec(r, M[0] + Math.cos(dir) * 3 * sc, M[1] + Math.sin(dir) * 3 * sc, dir, sc, op);
+    }
+    var VR = 11, SM = 0.58;                       // vesicle radius; receptor scale inside organelles
+    var GOLGI_RS = [84, 99, 114, 129, 144];
+    function ez(u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+    function sg(p, a, b) { return ez((p - a) / (b - a)); }
+    function lp(a, b, u) { return [a[0] + (b[0] - a[0]) * u, a[1] + (b[1] - a[1]) * u]; }
+    function qd(a, c, b, u) { return lp(lp(a, c, u), lp(c, b, u), u); }
+    function recCycle(t, pts) {
+      var p = (t / RPERIOD) % 1, P = pts[RSLOT], q0 = pts[RSLOT - 1], q1 = pts[RSLOT + 1];
+      var tx = q1[0] - q0[0], ty = q1[1] - q0[1], tl = Math.hypot(tx, ty); tx /= tl; ty /= tl;
+      var nx = P[0] - 500, ny = P[1] - 500, nl = Math.hypot(nx, ny); nx /= nl; ny /= nl;     // outward normal
+      var OUT = Math.atan2(ny, nx), IN = OUT + Math.PI;
+      var uncoat = sg(p, 0.26, 0.31), travel = sg(p, 0.31, 0.44),
+          fuse = sg(p, 0.44, 0.5), degr = sg(p, 0.5, 0.6);
+
+      // clathrin-mediated endocytosis: a shallow coated pit deepens into a round bud on a
+      // neck; the neck lengthens into a stalk, is constricted, and the vesicle pinches off
+      var DV = 34, R = VR, d = 0, w = 0, br = 0, budding = p >= 0.1 && p < 0.25, retract = p >= 0.25 && p < 0.29;
+      var s1 = sg(p, 0.1, 0.15), s2 = sg(p, 0.15, 0.21), s3 = sg(p, 0.21, 0.25);
+      if (p < 0.15) { br = 3 + (R - 3) * s1; w = br; d = br * 0.35; }             // shallow pit
+      else if (p < 0.21) { br = R; w = R - (R - 3.2) * s2; d = R * 0.35 + (DV - R * 0.35) * s2; }  // invagination, neck forms
+      else { br = R; w = 3.2 * (1 - s3) + 0.3 * s3; d = DV; }                    // the stalk is constricted
+      var C2 = [P[0] - nx * d, P[1] - ny * d];
+      function pt2(o, a, b) { return f(o[0] + tx * a - nx * b) + ',' + f(o[1] + ty * a - ny * b); }   // a along membrane, b inward
+      if (budding) {
+        var fl = 4.5, h = Math.sqrt(Math.max(0, br * br - w * w));            // bud/neck junction above the bud centre
+        var jl = [-w, d - h], jr = [w, d - h], big = 1;
+        var dd = 'M' + pt2(P, -w - fl, 0) + 'Q' + pt2(P, -w, 0) + ' ' + pt2(P, -w, 2.5) +
+          'L' + pt2(P, jl[0], Math.max(2.5, jl[1])) +
+          'A' + f(br) + ',' + f(br) + ' 0 ' + big + ',0 ' + pt2(P, jr[0], Math.max(2.5, jr[1])) +
+          'L' + pt2(P, w, 2.5) + 'Q' + pt2(P, w, 0) + ' ' + pt2(P, w + fl, 0);
+        pit.setAttribute('d', dd);
+        // clathrin coat on the cytosolic face of the bud
+        var cr2 = br + 2.6, ca = Math.asin(Math.min(1, w / br));
+        var c0 = [-Math.sin(ca) * cr2, d - Math.cos(ca) * cr2], c1 = [Math.sin(ca) * cr2, d - Math.cos(ca) * cr2];
+        coat.setAttribute('d', 'M' + pt2(P, c0[0], c0[1]) + 'A' + f(cr2) + ',' + f(cr2) + ' 0 1,0 ' + pt2(P, c1[0], c1[1]));
+        coat.removeAttribute('transform');
+        pitMask.setAttribute('d', 'M' + pt2(P, -w - fl, 0) + 'L' + pt2(P, w + fl, 0));
+        pit.setAttribute('opacity', '1'); coat.setAttribute('opacity', f(Math.min(1, s1 * 3))); pitMask.setAttribute('opacity', '1');
+      } else if (retract) {
+        // after scission the stalk remnant is drawn back into the plasma membrane
+        var rl = 12 * (1 - sg(p, 0.25, 0.29));
+        pit.setAttribute('d', 'M' + pt2(P, -6, 0) + 'Q' + pt2(P, -0.3, 0) + ' ' + pt2(P, -0.3, 2) + 'L' + pt2(P, -0.3, rl) + 'M' + pt2(P, 6, 0) + 'Q' + pt2(P, 0.3, 0) + ' ' + pt2(P, 0.3, 2) + 'L' + pt2(P, 0.3, rl));
+        pitMask.setAttribute('d', 'M' + pt2(P, -6, 0) + 'L' + pt2(P, 6, 0));
+        pit.setAttribute('opacity', f(rl > 0.5 ? 1 : 0)); pitMask.setAttribute('opacity', f(rl > 0.5 ? 1 : 0)); coat.setAttribute('opacity', '0');
+      } else { pit.setAttribute('opacity', '0'); coat.setAttribute('opacity', '0'); pitMask.setAttribute('opacity', '0'); }
+
+      // the old receptor: pit -> coated vesicle -> lysosome -> degraded
+      var V0 = [P[0] - nx * 34, P[1] - ny * 34];
+      var dv = [V0[0] - RLYSO[0], V0[1] - RLYSO[1]], dl = Math.hypot(dv[0], dv[1]); dv = [dv[0] / dl, dv[1] / dl];
+      var DOCK = [RLYSO[0] + dv[0] * 28, RLYSO[1] + dv[1] * 28];
+      var V = p < 0.31 ? V0 : (p < 0.44 ? qd(V0, [V0[0] - 30, V0[1] + 30], DOCK, travel) : lp(DOCK, RLYSO, fuse));
+      var u = [Math.cos(OUT), Math.sin(OUT)];
+      if (p < 0.1) setRec(oldRec, P[0], P[1], OUT, 1, 1);
+      else if (p < 0.25) {
+        // in the bud membrane at the bottom of the pit, Y in the bud lumen (extracellular)
+        anchor(oldRec, [C2[0] - nx * br, C2[1] - ny * br], OUT, 1 - (1 - SM) * sg(p, 0.1, 0.17), 1);
+      } else if (p < 0.44) {
+        // in the vesicle membrane, Y in the lumen
+        anchor(oldRec, [V[0] - u[0] * VR, V[1] - u[1] * VR], OUT, SM, 1);
+      } else if (p < 0.6) {
+        // in the lysosome's limiting membrane, then internalised and degraded
+        var RL2 = VR + (20 - VR) * fuse, k = 1 - 0.75 * degr;
+        anchor(oldRec, [V[0] - u[0] * RL2 * k, V[1] - u[1] * RL2 * k], OUT, SM * (1 - 0.5 * degr), 1 - degr);
+      } else setRec(oldRec, RLYSO[0], RLYSO[1], IN, 0.3, 0);
+      eVes.setAttribute('cx', f(V[0])); eVes.setAttribute('cy', f(V[1]));
+      eVes.setAttribute('r', f(p >= 0.44 ? VR * (1 - fuse) : VR));
+      eVes.setAttribute('opacity', p >= 0.25 && p < 0.5 ? f(p < 0.44 ? 1 : 1 - fuse) : '0');
+      eCoat.setAttribute('cx', f(V[0])); eCoat.setAttribute('cy', f(V[1]));
+      eCoat.setAttribute('opacity', p >= 0.25 && p < 0.31 ? f(1 - uncoat) : '0');
+      rFlash.setAttribute('opacity', p >= 0.44 && p < 0.58 ? f(Math.sin(Math.PI * sg(p, 0.44, 0.58)) * 0.8) : '0');
+      rFlash.setAttribute('r', f(20 + 8 * sg(p, 0.44, 0.58)));
+
+      // the replacement: ER -> COPII -> Golgi cis->trans -> secretory vesicle -> plasma membrane.
+      // Its Y stays in the lumen throughout; in the thin ER and Golgi lumens it lies angled along them.
+      var ERIN = Math.atan2(-eny, -enx), PD = [P[0] - nx * (VR + 4), P[1] - ny * (VR + 4)], S = null;
+      var inThin = false;
+      if (p >= 0.4 && p < 0.5) { inThin = true; setBent(ER_M_BAND, [etx, ety], [enx, eny], sg(p, 0.4, 0.46)); setRec(newRec, ER_M[0], ER_M[1], 0, SM, 0); }
+      else if (p >= 0.5 && p < 0.6) {
+        S = qd(ER_EXIT, [ER_EXIT[0] + 30, ER_EXIT[1] - 60], R_CIS, sg(p, 0.5, 0.6));
+        anchor(newRec, [S[0] - enx * VR, S[1] - eny * VR], Math.atan2(eny, enx), SM, 1);
+      } else if (p >= 0.6 && p < 0.72) {
+        var hop = sg(p, 0.6, 0.72) * (GOLGI_RS.length - 1), i0 = Math.min(GOLGI_RS.length - 2, Math.floor(hop)), fr = ez((hop - i0) * 1.3);
+        // cisternae are drawn 10 wide with a ~4 wide lumen: stem in the inner membrane
+        // band, Y along the lumen, tipped slightly outward
+        // the cisternae are drawn with a slight wave (see drawGolgi): use their true radius here
+        function cr(i) { return GOLGI_RS[i] + 2.5 * Math.sin(GA * 14 + i); }
+        var rr2 = cr(i0) + (cr(i0 + 1) - cr(i0)) * fr - 3.4;
+        inThin = true;
+        setBent([GC[0] + Math.cos(GA) * rr2, GC[1] + Math.sin(GA) * rr2], [-Math.sin(GA), Math.cos(GA)], [-Math.cos(GA), -Math.sin(GA)], 1);
+        setRec(newRec, GC[0], GC[1], 0, SM, 0);
+      } else if (p >= 0.72 && p < 0.86) {
+        S = qd(R_TRANS, [R_TRANS[0] - 70, R_TRANS[1] - 40], PD, sg(p, 0.72, 0.86));
+        anchor(newRec, [S[0] - nx * VR, S[1] - ny * VR], OUT, SM, 1);
+      } else if (p >= 0.86 && p < 0.92) {
+        // fusion: the vesicle lumen opens to the outside and the receptor ends up facing out
+        var fz = sg(p, 0.86, 0.92);
+        S = lp(PD, P, fz);
+        var Mz = lp([PD[0] - nx * VR, PD[1] - ny * VR], P, fz);
+        anchor(newRec, Mz, OUT, SM + (1 - SM) * fz, 1);
+      } else if (p >= 0.92) setRec(newRec, P[0], P[1], OUT, 1, 1);
+      else setRec(newRec, ER_M[0], ER_M[1], ERIN, SM, 0);
+      if (!inThin) bent.setAttribute('opacity', '0');
+      if (S) { sVes.setAttribute('cx', f(S[0])); sVes.setAttribute('cy', f(S[1])); }
+      sVes.setAttribute('r', f(p >= 0.86 && p < 0.92 ? VR * (1 - sg(p, 0.86, 0.92)) : VR));
+      sVes.setAttribute('opacity', (p >= 0.5 && p < 0.6) || (p >= 0.72 && p < 0.92) ? '1' : '0');
+      if (p >= 0.92 || p < 0.1) oldRec.setAttribute('opacity', p < 0.1 ? '1' : '0');
+      if (p < 0.4) newRec.setAttribute('opacity', '0');
+    }
+    recCycle(reduceMotion ? 0 : 0, pts0);
 
     // labels
     var labLayer = el('g', { class: 'labels' }, svg);
@@ -717,6 +878,7 @@
           cyto.setAttribute('d', d); memGlow.setAttribute('d', d); memLine.setAttribute('d', d);
           memInner.setAttribute('d', d); memHit.setAttribute('d', d);
           placeReceptors(pts);
+          recCycle(now / 1000, pts);
           mitos.forEach(function (up) { up(now / 1000); });
           mph(now / 1000);
           sting(now / 1000);
